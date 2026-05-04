@@ -5,7 +5,7 @@
 `<time-picker>` is a timepicker implemented as a Custom Web Component. It supports both AM/PM 12-hour and 24-hour formats and includes an intuitive UI with built-in keyboard accessibility (arrow keys and tab navigation).
 
 ## Demo
-https://akreid.github.io/ampm-timepicker/
+https://akreid.github.io/ampmTimepicker/
 
 ![AmPmTimePicker Demo](./capture.gif)
 

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AmPmTimePicker - Modern Web Component Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script type="module" src="./ampmTimepicker.js"></script>
+    <style>
+        :root {
+            --primary: #006A2C;
+            --primary-hover: #03471f;
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text: #212529;
+            --text-muted: #6c757d;
+            --border: #dee2e6;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+        }
+
+        section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--bg);
+            padding-bottom: 10px;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .demo-item {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .form-example {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: fit-content;
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+        }
+
+        pre, .code-snippet {
+            background: #2d3436;
+            color: #dfe6e9;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            margin-top: 10px;
+        }
+
+        .code-snippet {
+            padding: 8px 12px;
+            margin-top: 5px;
+            font-family: monospace;
+        }
+
+        .status-box {
+            background: #e9ecef;
+            padding: 10px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            min-height: 20px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Custom style example */
+        .custom-styled {
+            --primary-color: #6c5ce7;
+            --border-radius: 20px;
+            --bg-color: #f0f0ff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <h1>AmPmTimePicker</h1>
+            <p class="subtitle">A lightweight, customizable web component timepicker</p>
+        </header>
+
+        <section>
+            <h2>1. Basic Examples</h2>
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <label>Default (24h)</label>
+                    <time-picker></time-picker>
+                    <div class="code-snippet">&lt;time-picker&gt;&lt;/time-picker&gt;</div>
+                </div>
+                <div class="demo-item">
+                    <label>AM/PM Mode (12h)</label>
+                    <time-picker use-ampm="true" value="14:30"></time-picker>
+                    <div class="code-snippet">&lt;time-picker use-ampm="true" value="14:30"&gt;&lt;/time-picker&gt;</div>
+                </div>
+                <div class="demo-item">
+                    <label>Custom Labels & Interval (15m)</label>
+                    <time-picker use-ampm="true" interval="15" hour-label="HH" min-label="MM" ampm-label="AM/PM">
+                    </time-picker>
+                    <div class="code-snippet">&lt;time-picker use-ampm="true" interval="15" hour-label="HH" min-label="MM" ampm-label="AM/PM"&gt;&lt;/time-picker&gt;</div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>2. Component States</h2>
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <label>Disabled State</label>
+                    <time-picker disabled value="10:00"></time-picker>
+                    <div class="code-snippet">&lt;time-picker disabled value="10:00"&gt;&lt;/time-picker&gt;</div>
+                </div>
+                <div class="demo-item">
+                    <label>Read-only State</label>
+                    <time-picker readonly value="15:45"></time-picker>
+                    <div class="code-snippet">&lt;time-picker readonly value="15:45"&gt;&lt;/time-picker&gt;</div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>3. Form Integration</h2>
+            <p>This component supports <code>ElementInternals</code>, allowing it to work seamlessly with native HTML
+                forms.</p>
+            <form id="demoForm" class="form-example">
+                <div class="demo-item">
+                    <label for="booking-time">Booking Time (Required):</label>
+                    <time-picker name="booking-time" required use-ampm="true"></time-picker>
+                    <div class="code-snippet">&lt;time-picker name="booking-time" required use-ampm="true"&gt;&lt;/time-picker&gt;</div>
+                </div>
+                <button type="submit" class="btn">Submit Form</button>
+            </form>
+            <div id="formOutput" class="status-box">Form Data: Waiting for submission...</div>
+        </section>
+
+        <section>
+            <h2>4. Custom Styling</h2>
+            <p>Customize the appearance using CSS Custom Properties.</p>
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <label>Purple Theme with Rounded Corners</label>
+                    <time-picker class="custom-styled"></time-picker>
+                    <pre>
+.custom-styled {
+  --primary-color: #6c5ce7;
+  --border-radius: 20px;
+  --bg-color: #f0f0ff;
+}</pre>
+                </div>
+                <div class="demo-item">
+                    <label>Custom Invalid Color (Required & Empty)</label>
+                    <time-picker style="--invalid-color: #ff9800;" required></time-picker>
+                    <div class="code-snippet">&lt;time-picker style="--invalid-color: #ff9800;" required&gt;&lt;/time-picker&gt;</div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>5. Time Range & Constraints</h2>
+            <p>Restrict selectable time ranges using <code>start-time</code> and <code>end-time</code> attributes.</p>
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <label>Specific Range (09:00 - 17:59)</label>
+                    <time-picker start-time="09:00" end-time="17:59"></time-picker>
+                    <div class="code-snippet">&lt;time-picker start-time="09:00" end-time="17:59"&gt;&lt;/time-picker&gt;</div>
+                </div>
+                <div class="demo-item">
+                    <label>Start from 14:30</label>
+                    <time-picker start-time="14:30"></time-picker>
+                    <div class="code-snippet">&lt;time-picker start-time="14:30"&gt;&lt;/time-picker&gt;</div>
+                </div>
+                <div class="demo-item">
+                    <label>AM/PM with End Time (13:59) & 15m Interval</label>
+                    <time-picker use-ampm="true" end-time="13:59" interval="15"></time-picker>
+                    <div class="code-snippet">&lt;time-picker use-ampm="true" end-time="13:59" interval="15"&gt;&lt;/time-picker&gt;</div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            &copy; 2026 akreid. Released under MIT License.
+        </footer>
+    </div>
+
+    <script>
+        // Form submission demo
+        document.getElementById('demoForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const time = formData.get('booking-time');
+            document.getElementById('formOutput').textContent = `Form Data: { "booking-time": "${time}" }`;
+        });
+
+        // Event listener demo
+        document.querySelectorAll('time-picker').forEach(picker => {
+            picker.addEventListener('change', (e) => {
+                console.log('Value changed:', e.detail.value);
+            });
+        });
+    </script>
+
+</body>
+
+</html>

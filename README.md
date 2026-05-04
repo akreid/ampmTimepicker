@@ -72,6 +72,8 @@ The appearance of the component's internals (Shadow DOM) can be customized exter
 | `--primary-color`| `#007bff` | Outline color on focus and active list item color |
 | `--border-color` | `#ddd` | Border line color |
 | `--bg-hover` | `#f1f7ff` | Background color of list items on hover and active state |
+| `--invalid-color` | `#dc3545` | Border and focus color when the component is invalid (e.g., required but empty) |
+| `--toggle-border-left` | `1px solid var(--border-color)` | Border left for the toggle button |
 | `--toggle-icon-url` | `none` | Icon image of the right toggle button (in `url('...')` format) |
 | `--toggle-icon-size`| `16px` | Size of the toggle icon |
 

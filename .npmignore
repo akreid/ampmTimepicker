@@ -1,7 +1,7 @@
 *.mp4
 *.zip
-ampmTimepicker.md
 ampmTimepicker_1.0.0.js
 capture.mp4
 index.html
 capture.gif
+.gitignore

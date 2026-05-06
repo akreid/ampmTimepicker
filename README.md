@@ -2,23 +2,51 @@
 
 # `ampmTimepicker.js` Usage Guide
 
-`<time-picker>` is a timepicker implemented as a Custom Web Component. It supports both AM/PM 12-hour and 24-hour formats and includes an intuitive UI with built-in keyboard accessibility (arrow keys and tab navigation).
+[🇰🇷 한국어 버전](./README_KR.md)
+
+[![npm version](https://img.shields.io/npm/v/@akreid/ampm-timepicker.svg?style=flat-square)](https://www.npmjs.com/package/@akreid/ampm-timepicker)
+[![npm downloads](https://img.shields.io/npm/dm/@akreid/ampm-timepicker.svg?style=flat-square)](https://www.npmjs.com/package/@akreid/ampm-timepicker)
+
+`<time-picker>` is a **zero-dependency, vanilla JavaScript** timepicker implemented as a native Custom Web Component. It works seamlessly in any environment **without frameworks like React or Vue.** It supports both AM/PM 12-hour and 24-hour formats and includes an intuitive UI with built-in keyboard accessibility (arrow keys and tab navigation).
 
 ## Demo
 https://akreid.github.io/ampmTimepicker/
 
 ![AmPmTimePicker Demo](./capture.gif)
 
-## 🚀 Installation & Usage
+### 1. Using ES Module (Recommended)
+
+If your project supports ES modules, it's best to install it via npm and import it.
+
 ```bash
+# Install via npm
 npm install @akreid/ampm-timepicker
+# or via yarn
+yarn add @akreid/ampm-timepicker
 ```
 
-Include the script in your HTML file and use the `<time-picker>` custom tag.
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AmPmTimePicker Demo</title>
+  <!-- Import the component as a module -->
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.1.2/ampmTimepicker.js"></script>
+</head>
+<body>
+  <!-- Usage example -->
+  <time-picker use-ampm="true" interval="15"></time-picker>
+</body>
+</html>
+```
+
+### 2. Using CDN (Quick Start)
+
+You can use it immediately by adding a `<script>` tag to your HTML file. It is recommended to use a file path that includes the version number.
 
 ```html
-<!-- Include script -->
-<script src="/ampmTimepicker.js"></script>
+<!-- Include script (Version: 1.1.2) -->
+<script src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.1.2/ampmTimepicker.js"></script>
 
 <!-- Basic usage -->
 <time-picker></time-picker>
@@ -120,17 +148,25 @@ picker.addEventListener('change', (e) => {
 Since it supports `ElementInternals`, you can use it directly inside a `<form>` tag like a native input.
 
 ```html
-<form id="myForm">
-  <label for="event-time">Event Time:</label>
-  <time-picker name="event-time" required></time-picker>
-  <button type="submit">Submit</button>
+<form id="scheduleForm">
+  <time-picker name="setTime"></time-picker>
+  <time-picker name="startTime" start-time="08:30" value="09:00" interval="10"></time-picker>
 </form>
 
 <script>
-  document.getElementById('myForm').addEventListener('submit', (e) => {
+  const scheduleForm = document.getElementById('scheduleForm');
+  scheduleForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    console.log(formData.get('event-time')); // Returns "HH:mm"
+    
+    // Use the native FormData API to easily extract values
+    const formData = new FormData(scheduleForm);
+    const setTime = formData.get('setTime');
+    const startTime = formData.get('startTime');
+    
+    alert(`Selected Time: ${setTime}\nStart Work: ${startTime}`);
+
+    // Tip: When sending to a server via fetch or axios:
+    // axios.post('/api/save', Object.fromEntries(formData));
   });
 </script>
 ```
@@ -145,3 +181,6 @@ This component is designed to be fully operable using a keyboard, in addition to
   - Within each column, use the `↑` or `↓` keys to navigate through the values.
 - **Tab Focus Control**: Pressing the `Tab` key within the dropdown smoothly moves the focus to the next element. Logic is applied to prevent the browser address bar from capturing the focus (a common Shadow DOM focus trap issue).
 - **Screen Scroll Synchronization**: Scrolling the browser window while the dropdown is open will automatically close the dropdown and commit the currently selected value.
+
+## 📝 Changelog
+Detailed changes for each release are documented in the [CHANGELOG.md](./CHANGELOG.md).

@@ -108,7 +108,8 @@
             background: var(--primary-hover);
         }
 
-        pre, .code-snippet {
+        pre,
+        .code-snippet {
             background: #2d3436;
             color: #dfe6e9;
             padding: 15px;
@@ -169,13 +170,15 @@
                 <div class="demo-item">
                     <label>AM/PM Mode (12h)</label>
                     <time-picker use-ampm="true" value="14:30"></time-picker>
-                    <div class="code-snippet">&lt;time-picker use-ampm="true" value="14:30"&gt;&lt;/time-picker&gt;</div>
+                    <div class="code-snippet">&lt;time-picker use-ampm="true" value="14:30"&gt;&lt;/time-picker&gt;
+                    </div>
                 </div>
                 <div class="demo-item">
                     <label>Custom Labels & Interval (15m)</label>
                     <time-picker use-ampm="true" interval="15" hour-label="HH" min-label="MM" ampm-label="AM/PM">
                     </time-picker>
-                    <div class="code-snippet">&lt;time-picker use-ampm="true" interval="15" hour-label="HH" min-label="MM" ampm-label="AM/PM"&gt;&lt;/time-picker&gt;</div>
+                    <div class="code-snippet">&lt;time-picker use-ampm="true" interval="15" hour-label="HH"
+                        min-label="MM" ampm-label="AM/PM"&gt;&lt;/time-picker&gt;</div>
                 </div>
             </div>
         </section>
@@ -204,7 +207,8 @@
                 <div class="demo-item">
                     <label for="booking-time">Booking Time (Required):</label>
                     <time-picker name="booking-time" required use-ampm="true"></time-picker>
-                    <div class="code-snippet">&lt;time-picker name="booking-time" required use-ampm="true"&gt;&lt;/time-picker&gt;</div>
+                    <div class="code-snippet">&lt;time-picker name="booking-time" required
+                        use-ampm="true"&gt;&lt;/time-picker&gt;</div>
                 </div>
                 <button type="submit" class="btn">Submit Form</button>
             </form>
@@ -228,7 +232,8 @@
                 <div class="demo-item">
                     <label>Custom Invalid Color (Required & Empty)</label>
                     <time-picker style="--invalid-color: #ff9800;" required></time-picker>
-                    <div class="code-snippet">&lt;time-picker style="--invalid-color: #ff9800;" required&gt;&lt;/time-picker&gt;</div>
+                    <div class="code-snippet">&lt;time-picker style="--invalid-color: #ff9800;"
+                        required&gt;&lt;/time-picker&gt;</div>
                 </div>
             </div>
         </section>
@@ -240,7 +245,8 @@
                 <div class="demo-item">
                     <label>Specific Range (09:00 - 17:59)</label>
                     <time-picker start-time="09:00" end-time="17:59"></time-picker>
-                    <div class="code-snippet">&lt;time-picker start-time="09:00" end-time="17:59"&gt;&lt;/time-picker&gt;</div>
+                    <div class="code-snippet">&lt;time-picker start-time="09:00"
+                        end-time="17:59"&gt;&lt;/time-picker&gt;</div>
                 </div>
                 <div class="demo-item">
                     <label>Start from 14:30</label>
@@ -250,7 +256,8 @@
                 <div class="demo-item">
                     <label>AM/PM with End Time (13:59) & 15m Interval</label>
                     <time-picker use-ampm="true" end-time="13:59" interval="15"></time-picker>
-                    <div class="code-snippet">&lt;time-picker use-ampm="true" end-time="13:59" interval="15"&gt;&lt;/time-picker&gt;</div>
+                    <div class="code-snippet">&lt;time-picker use-ampm="true" end-time="13:59"
+                        interval="15"&gt;&lt;/time-picker&gt;</div>
                 </div>
             </div>
         </section>

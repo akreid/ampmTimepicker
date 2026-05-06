@@ -118,7 +118,7 @@ class AmPmTimePicker extends HTMLElement {
 
   prepareData() {
     if (this.useAmPm) {
-      this.hours = Array.from({ length: 12 }, (_, i) => (i + 1).toString().padStart(2, '0'));
+      this.hours = Array.from({ length: 12 }, (_, i) => (i === 0 ? 12 : i).toString().padStart(2, '0'));
       this.ampms = ['AM', 'PM'];
     } else {
       this.hours = Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0'));

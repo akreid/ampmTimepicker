@@ -2,11 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.3] - 2026-05-06
+
+### Added
+- **Multilingual Documentation**: Renamed the Korean documentation to [README_KR.md](./README_KR.md) and added cross-links between the English and Korean versions for better accessibility.
+
+### Changed
+- **Chronological Time Sorting**: Updated the AM/PM hour dropdown sequence to list from `12` then `01` to `11` instead of `01` to `12`, reflecting standard chronological order.
+- **Repository Optimization**: Updated `.gitignore` and `.npmignore` to properly include/exclude documentation and configuration files.
+- **Demo Polish**: Fixed typos and improved the script examples in `index.html`.
+
 ## [1.1.2] - 2026-05-04
 
 ### Changed
-- **Documentation Update**: Added `--invalid-color` and `--toggle-border-left` to the CSS Custom Properties documentation in README.md.
-- **Documentation Sync**: Synchronized the Korean documentation (`ampmTimepicker.md`) with the latest features and attributes.
+- **Documentation Update**: Added `--invalid-color` and `--toggle-border-left` to the CSS Custom Properties documentation.
 
 ## [1.1.1] - 2026-05-04
 

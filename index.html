@@ -17,7 +17,104 @@
             --card-bg: #ffffff;
             --text: #212529;
             --text-muted: #6c757d;
-            --border: #dee2e6;
+            --border: #999;
+            --status-bg: #e9ecef;
+            color-scheme: light;
+        }
+
+        time-picker {
+            --ampm-border-color: var(--border);
+            --ampm-dropdown-divider-color: var(--border);
+        }
+
+        [data-theme="dark"] {
+            --primary: #2ecc71;
+            --primary-hover: #27ae60;
+            --bg: #121212;
+            --card-bg: #1e1e1e;
+            --text: #e0e0e0;
+            --text-muted: #a0a0a0;
+            --border: #333333;
+            --status-bg: #2d3436;
+            color-scheme: dark;
+        }
+
+        /* Force component to light mode when page is in light mode (if OS is dark) */
+        [data-theme="light"] time-picker {
+            --ampm-bg-hover: #f1f7ff;
+            --ampm-primary-color: #007bff;
+            --ampm-dropdown-header-bg: rgba(0, 0, 0, 0.04);
+            --ampm-dropdown-scrollbar-thumb: #ccc;
+            --ampm-disabled-bg: #ddd;
+            --ampm-readonly-bg: #f0f0f0;
+        }
+
+        /* Force component to dark mode when page is in dark mode (if OS is light) */
+        [data-theme="dark"] time-picker {
+            --ampm-bg-hover: rgba(255, 255, 255, 0.1);
+            --ampm-primary-color: #4da3ff;
+            --ampm-dropdown-header-bg: rgba(255, 255, 255, 0.05);
+            --ampm-dropdown-scrollbar-thumb: #555;
+            --ampm-disabled-bg: #444;
+            --ampm-readonly-bg: #2a2a2a;
+        }
+
+        /* Theme Switch CSS */
+        .theme-switch-wrapper {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .theme-switch {
+            display: inline-block;
+            height: 24px;
+            position: relative;
+            width: 50px;
+        }
+
+        .theme-switch input {
+            display: none;
+        }
+
+        .slider {
+            background-color: #ccc;
+            bottom: 0;
+            cursor: pointer;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            transition: .4s;
+        }
+
+        .slider:before {
+            background-color: #fff;
+            bottom: 4px;
+            content: "";
+            height: 16px;
+            left: 4px;
+            position: absolute;
+            transition: .4s;
+            width: 16px;
+        }
+
+        input:checked+.slider {
+            background-color: var(--primary);
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(26px);
+        }
+
+        .slider.round {
+            border-radius: 24px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
         }
 
         body {
@@ -126,7 +223,7 @@
         }
 
         .status-box {
-            background: #e9ecef;
+            background: var(--status-bg);
             padding: 10px;
             border-radius: 6px;
             font-family: monospace;
@@ -144,9 +241,28 @@
 
         /* Custom style example */
         .custom-styled {
-            --primary-color: #6c5ce7;
-            --border-radius: 20px;
-            --bg-color: #f0f0ff;
+            --ampm-primary-color: #6c5ce7;
+            --ampm-border-radius: 20px;
+            --ampm-bg-color: #f0f0ff;
+        }
+
+        [data-theme="dark"] .custom-styled {
+            --ampm-bg-color: #1a1a2e;
+        }
+
+        /* Advanced style example (::part) */
+        .advanced-styled::part(input) {
+            text-align: center;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .advanced-styled::part(toggle-btn) {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        [data-theme="dark"] .advanced-styled::part(toggle-btn) {
+            background-color: rgba(255, 255, 255, 0.1);
         }
     </style>
 </head>
@@ -155,6 +271,13 @@
 
     <div class="container">
         <header>
+            <div class="theme-switch-wrapper">
+                <label class="theme-switch" for="checkbox">
+                    <input type="checkbox" id="checkbox" />
+                    <div class="slider round"></div>
+                </label>
+                <em style="margin-left: 10px; font-size: 0.9rem; color: var(--text-muted);">Dark Mode</em>
+            </div>
             <h1>AmPmTimePicker</h1>
             <p class="subtitle">A lightweight, customizable web component timepicker</p>
         </header>
@@ -224,15 +347,20 @@
                     <time-picker class="custom-styled"></time-picker>
                     <pre>
 .custom-styled {
-  --primary-color: #6c5ce7;
-  --border-radius: 20px;
-  --bg-color: #f0f0ff;
+  --ampm-primary-color: #6c5ce7;
+  --ampm-border-radius: 20px;
+  --ampm-bg-color: #f0f0ff;
+}
+
+/* Dark mode override */
+[data-theme="dark"] .custom-styled {
+  --ampm-bg-color: #1a1a2e;
 }</pre>
                 </div>
                 <div class="demo-item">
                     <label>Custom Invalid Color (Required & Empty)</label>
-                    <time-picker style="--invalid-color: #ff9800;" required></time-picker>
-                    <div class="code-snippet">&lt;time-picker style="--invalid-color: #ff9800;"
+                    <time-picker style="--ampm-invalid-color: #ff9800;" required></time-picker>
+                    <div class="code-snippet">&lt;time-picker style="--ampm-invalid-color: #ff9800;"
                         required&gt;&lt;/time-picker&gt;</div>
                 </div>
             </div>
@@ -262,12 +390,51 @@
             </div>
         </section>
 
+        <section>
+            <h2>6. Advanced Styling (::part)</h2>
+            <p>Customize internal elements (like the input or toggle button) directly using the <code>::part()</code>
+                selector.</p>
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <label>Customized Input & Button</label>
+                    <time-picker class="advanced-styled" value="12:00"></time-picker>
+                    <pre>
+.advanced-styled::part(input) {
+  text-align: center;
+  font-weight: bold;
+  color: var(--primary);
+}
+.advanced-styled::part(toggle-btn) {
+  background-color: rgba(0,0,0,0.05);
+}</pre>
+                </div>
+            </div>
+        </section>
+
         <footer>
             &copy; 2026 akreid. Released under MIT License.
         </footer>
     </div>
 
     <script>
+        // Theme Switch Logic
+        const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
+        const currentTheme = localStorage.getItem('theme');
+
+        if (currentTheme) {
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            if (currentTheme === 'dark') toggleSwitch.checked = true;
+        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            toggleSwitch.checked = true;
+        }
+
+        toggleSwitch.addEventListener('change', function (e) {
+            const theme = e.target.checked ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        });
+
         // Form submission demo
         document.getElementById('demoForm').addEventListener('submit', (e) => {
             e.preventDefault();

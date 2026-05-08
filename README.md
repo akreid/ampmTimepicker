@@ -7,6 +7,9 @@
 [![npm version](https://img.shields.io/npm/v/@akreid/ampm-timepicker.svg?style=flat-square)](https://www.npmjs.com/package/@akreid/ampm-timepicker)
 [![npm downloads](https://img.shields.io/npm/dm/@akreid/ampm-timepicker.svg?style=flat-square)](https://www.npmjs.com/package/@akreid/ampm-timepicker)
 
+> ⚠️ **v1.2.0 Update Notice (Styling Changes)**<br>
+> Starting from this update, the component now inherits fonts and colors from its parent element and supports automatic dark mode. As a result, its appearance might look slightly different when updating from older versions. However, it will now blend much more naturally with your default website styles without requiring manual CSS tweaks.
+
 `<time-picker>` is a **zero-dependency, vanilla JavaScript** timepicker implemented as a native Custom Web Component. It works seamlessly in any environment **without frameworks like React or Vue.** It supports both AM/PM 12-hour and 24-hour formats and includes an intuitive UI with built-in keyboard accessibility (arrow keys and tab navigation).
 
 ## Demo
@@ -31,7 +34,7 @@ yarn add @akreid/ampm-timepicker
 <head>
   <title>AmPmTimePicker Demo</title>
   <!-- Import the component as a module -->
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.1.2/ampmTimepicker.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.1.3/ampmTimepicker.js"></script>
 </head>
 <body>
   <!-- Usage example -->
@@ -45,8 +48,8 @@ yarn add @akreid/ampm-timepicker
 You can use it immediately by adding a `<script>` tag to your HTML file. It is recommended to use a file path that includes the version number.
 
 ```html
-<!-- Include script (Version: 1.1.2) -->
-<script src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.1.2/ampmTimepicker.js"></script>
+<!-- Include script (Version: 1.1.3) -->
+<script src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.1.3/ampmTimepicker.js"></script>
 
 <!-- Basic usage -->
 <time-picker></time-picker>
@@ -86,35 +89,59 @@ You can control the picker's behavior and display format by adding attributes to
 </time-picker>
 ```
 
-## 🎨 CSS Custom Properties (Variables)
+## 🎨 Styling & Theming
 
-The appearance of the component's internals (Shadow DOM) can be customized externally using CSS variables.
+`<time-picker>` natively supports **Automatic Dark Mode** synchronized with the OS and browser settings. Its default styles adapt naturally to the parent container's theme using native CSS System Colors.
+
+### 1. CSS Custom Properties
+You can override the default colors using the following CSS variables. (Old variable names are still supported, but `--ampm-` prefix is recommended to prevent conflicts.)
 
 | Variable Name | Default Value | Description |
 |---|---|---|
-| `--width` | `165px` | The total width of the input form |
-| `--height` | `42px` | The total height of the input form |
-| `--border-radius`| `8px` | The border-radius for all corners |
-| `--bg-color` | `#fff` | Component background color |
-| `--font-color` | `#333` | Text color |
-| `--primary-color`| `#007bff` | Outline color on focus and active list item color |
-| `--border-color` | `#ddd` | Border line color |
-| `--bg-hover` | `#f1f7ff` | Background color of list items on hover and active state |
-| `--invalid-color` | `#dc3545` | Border and focus color when the component is invalid (e.g., required but empty) |
-| `--toggle-border-left` | `1px solid var(--border-color)` | Border left for the toggle button |
-| `--toggle-icon-url` | `none` | Icon image of the right toggle button (in `url('...')` format) |
-| `--toggle-icon-size`| `16px` | Size of the toggle icon |
+| `--ampm-width` | `165px` | The total width of the input form |
+| `--ampm-height` | `42px` | The total height of the input form |
+| `--ampm-border-radius`| `8px` | The border-radius for all corners |
+| `--ampm-bg-color` | `Field` (System Color)| Background color |
+| `--ampm-font-color` | `FieldText` (System Color)| Text color |
+| `--ampm-primary-color`| `#007bff` / `#4da3ff` (Dark) | Outline color on focus and active list item color |
+| `--ampm-border-color` | `ButtonBorder` (System Color)| Border line color |
+| `--ampm-invalid-color`| `#dc3545` | Color when the component is invalid |
+| `--ampm-disabled-bg` | `#ddd` / `#444` (Dark) | Background color when disabled |
+| `--ampm-disabled-opacity`| `0.6` | Opacity of the component when disabled |
+| `--ampm-readonly-bg` | `#f0f0f0` / `#2a2a2a` (Dark) | Background color when readonly |
+| `--ampm-dropdown-bg` | `var(--ampm-bg-color)` | Dropdown background color |
+| `--ampm-dropdown-text-color`| `var(--ampm-font-color)` | Dropdown text color |
+| `--ampm-dropdown-border-color`| `var(--ampm-border-color)` | Dropdown outer border color |
+| `--ampm-dropdown-hover-bg` | `var(--ampm-bg-hover)` | Dropdown item hover background color |
+| `--ampm-dropdown-header-bg` | `rgba(0,0,0,0.04)` | Dropdown column header background |
+| `--ampm-dropdown-divider-color`| `#eee` / `#444` (Dark) | Dropdown internal column divider lines |
+| `--ampm-dropdown-scrollbar-thumb`| `#ccc` / `#555` (Dark) | Dropdown scrollbar thumb color |
 
-### CSS Usage Example
+### 2. Internal Element Control (`::part`)
+For more granular control (like paddings or font weights), use the `::part` selector.
+- `part="container"`: The main wrapper container
+- `part="input"`: The internal text input
+- `part="toggle-btn"`: The dropdown toggle button
+
 ```css
-/* Define globally or on a specific class in your stylesheet */
-time-picker {
-  --primary-color: #ff5722;
-  --bg-color: #f9f9f9;
-  --border-radius: 4px;
-  --toggle-icon-url: url('../images/icon_clock.svg');
+/* Example: Change input padding and alignment */
+time-picker::part(input) {
+  padding-left: 20px;
+  text-align: center;
 }
 ```
+
+### 3. Dropdown Global Styling
+The dropdown list is appended to `document.body`. To style the dropdown items globally, use the `.ampm-timepicker-dropdown` class.
+
+```css
+/* Example: Change hover background color */
+.ampm-timepicker-dropdown .item:hover {
+  background-color: #ffcccc !important;
+}
+```
+
+> **Note**: If you want to disable automatic dark mode and force a light theme, add `:root { --ampm-bg-color: #ffffff; --ampm-font-color: #333333; }` to your global stylesheet.
 
 ## 💻 JavaScript API
 

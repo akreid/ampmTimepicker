@@ -5,6 +5,9 @@
 [![npm version](https://img.shields.io/npm/v/@akreid/ampm-timepicker.svg?style=flat-square)](https://www.npmjs.com/package/@akreid/ampm-timepicker)
 [![npm downloads](https://img.shields.io/npm/dm/@akreid/ampm-timepicker.svg?style=flat-square)](https://www.npmjs.com/package/@akreid/ampm-timepicker)
 
+> ⚠️ **v1.2.0 스타일 업데이트 주의사항 (Styling Changes)**<br>
+> 이번 업데이트부터 컴포넌트가 부모 요소의 폰트 및 색상 스타일을 상속(`inherit`)받고 자동 다크모드를 지원하도록 변경되었습니다. 이로 인해 기존 버전에서 업데이트 시 디자인이 약간 달라 보일 수 있습니다. 대신 별도의 커스텀 없이도 사용자의 웹페이지(기본 스타일)에 훨씬 더 자연스럽게 녹아들게 되었습니다.
+
 `<time-picker>`는 **의존성 없는 순수 자바스크립트(Vanilla JS)**로 구현된 네이티브 커스텀 웹 컴포넌트 타임피커입니다. 리액트나 뷰 같은 **별도의 프레임워크 없이도** 어디서든 독립적으로 작동하며, 12시간/24시간 형식 지원 및 직관적인 키보드 접근성(방향키 및 탭 이동)을 제공합니다.
 
 ## 🚀 설치 및 적용
@@ -26,7 +29,7 @@ yarn add @akreid/ampm-timepicker
 <head>
   <title>AmPmTimePicker</title>
   <!-- 최상위 컴포넌트만 임포트 (필요 시: :use-ampm, :interval 등 속성을 사용하여 모드 커스텀 가능) -->
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.1.2/ampmTimepicker.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.1.3/ampmTimepicker.js"></script>
 </head>
 <body>
   <!-- 사용 예시 -->
@@ -40,8 +43,8 @@ yarn add @akreid/ampm-timepicker
 HTML 파일에 `<script>` 태그를 추가하여 바로 사용할 수 있습니다. CDN을 사용할 때는 버전 번호가 포함된 파일 경로를 사용하는 것이 좋습니다.
 
 ```html
-<!-- 스크립트 추가 (버전: 1.1.2) -->
-<script src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.1.2/ampmTimepicker.js"></script>
+<!-- 스크립트 추가 (버전: 1.1.3) -->
+<script src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.1.3/ampmTimepicker.js"></script>
 
 <!-- 기본 사용 -->
 <time-picker></time-picker>
@@ -81,35 +84,59 @@ HTML 파일에 `<script>` 태그를 추가하여 바로 사용할 수 있습니�
 </time-picker>
 ```
 
-## 🎨 CSS 변수 (Custom Properties)
+## 🎨 스타일 커스터마이징 및 다크모드 (Styling & Theming)
 
-컴포넌트 내부(Shadow DOM)의 외형은 CSS 변수를 통해 외부에서 커스터마이징 가능합니다.
+`<time-picker>`는 OS 및 브라우저의 환경 설정에 완벽하게 동기화되는 **자동 다크모드**를 기본 지원합니다. 기본 폼 스타일이 부모 컨테이너(웹페이지)의 테마를 자연스럽게 따라가도록 설계되었습니다.
+
+### 1. CSS 변수 (Custom Properties)
+기본 색상을 덮어쓰고 싶다면 다음 CSS 변수를 사용할 수 있습니다. (기존 변수명과 호환되며, 충돌 방지를 위해 `--ampm-` 접두사 사용을 권장합니다.)
 
 | 변수명 | 기본값 | 설명 |
 |---|---|---|
-| `--width` | `165px` | 폼의 전체 너비 |
-| `--height` | `42px` | 폼의 전체 높이 |
-| `--border-radius`| `8px` | 전체 모서리 둥글기 반경 |
-| `--bg-color` | `#fff` | 컴포넌트 배경색 |
-| `--font-color` | `#333` | 텍스트 색상 |
-| `--primary-color`| `#007bff` | 포커스 시 외곽선 및 활성화된 목록 색상 |
-| `--border-color` | `#ddd` | 테두리 선 색상 |
-| `--bg-hover` | `#f1f7ff` | 목록 아이템 호버 및 활성화 시 배경색 |
-| `--invalid-color` | `#dc3545` | 필수 값 누락 등 폼 검증 실패(invalid) 시 테두리 및 포커스 색상 |
-| `--toggle-border-left` | `1px solid var(--border-color)` | 토글 버튼의 왼쪽 테두리 선 |
-| `--toggle-icon-url` | `none` | 우측 토글 버튼 아이콘 이미지 (`url('...')` 형식) |
-| `--toggle-icon-size`| `16px` | 토글 아이콘 크기 |
+| `--ampm-width` | `165px` | 폼의 전체 너비 |
+| `--ampm-height` | `42px` | 폼의 전체 높이 |
+| `--ampm-border-radius`| `8px` | 폼 및 드롭다운 모서리 둥글기 |
+| `--ampm-bg-color` | `Field` (OS 테마) | 컴포넌트 내부 및 드롭다운 배경색 |
+| `--ampm-font-color` | `FieldText` (OS 테마) | 텍스트 색상 |
+| `--ampm-primary-color`| `#007bff` / `#4da3ff` (다크모드) | 포커스 시 외곽선 및 활성 목록 색상 |
+| `--ampm-border-color` | `ButtonBorder` (OS 테마)| 테두리 선 색상 |
+| `--ampm-invalid-color`| `#dc3545` | 검증 실패 시 색상 |
+| `--ampm-disabled-bg` | `#ddd` / `#444` (다크모드) | 비활성화(disabled) 상태일 때 배경색 |
+| `--ampm-disabled-opacity`| `0.6` | 비활성화 상태일 때 투명도 |
+| `--ampm-readonly-bg` | `#f0f0f0` / `#2a2a2a` (다크모드) | 읽기 전용(readonly) 상태일 때 배경색 |
+| `--ampm-dropdown-bg` | `var(--ampm-bg-color)` | 드롭다운 배경색 |
+| `--ampm-dropdown-text-color`| `var(--ampm-font-color)` | 드롭다운 텍스트 색상 |
+| `--ampm-dropdown-border-color`| `var(--ampm-border-color)` | 드롭다운 외곽 테두리 색상 |
+| `--ampm-dropdown-hover-bg` | `var(--ampm-bg-hover)` | 드롭다운 아이템 호버 시 배경색 |
+| `--ampm-dropdown-header-bg` | `rgba(0,0,0,0.04)` | 드롭다운 컬럼 상단(AM/PM, 시, 분) 배경색 |
+| `--ampm-dropdown-divider-color`| `#eee` / `#444` (다크모드) | 드롭다운 내부 열 구분선 및 하단 구분선 |
+| `--ampm-dropdown-scrollbar-thumb`| `#ccc` / `#555` (다크모드) | 드롭다운 스크롤바 색상 |
 
-### CSS 적용 예시
+### 2. 컴포넌트 내부 세부 제어 (`::part`)
+더 세밀한 조작(패딩, 폰트 굵기 등)이 필요하다면 `::part` 선택자를 사용하세요.
+- `part="container"`: 전체 테두리를 감싸는 컨테이너
+- `part="input"`: 실제 입력이 이루어지는 Input 영역
+- `part="toggle-btn"`: 우측 화살표 토글 버튼
+
 ```css
-/* 스타일 시트에서 전역 또는 특정 클래스에 정의 */
-time-picker {
-  --primary-color: #ff5722;
-  --bg-color: #f9f9f9;
-  --border-radius: 4px;
-  --toggle-icon-url: url('../images/icon_clock.svg');
+/* Input 내부 패딩 및 글자 정렬 변경 예시 */
+time-picker::part(input) {
+  padding-left: 20px;
+  text-align: center;
 }
 ```
+
+### 3. 드롭다운(Dropdown) 전역 클래스 제어
+타임피커의 드롭다운은 `document.body`에 생성됩니다. 드롭다운 목록의 스타일을 세밀하게 제어하고 싶다면 `.ampm-timepicker-dropdown` 클래스를 활용하세요.
+
+```css
+/* 드롭다운 호버 색상 직접 변경 예시 */
+.ampm-timepicker-dropdown .item:hover {
+  background-color: #ffcccc !important;
+}
+```
+
+> **참고**: 다크모드를 원하지 않고 항상 라이트모드(밝은 테마)로 고정하고 싶다면 전역 CSS에 `:root { --ampm-bg-color: #ffffff; --ampm-font-color: #333333; }`를 선언하세요.
 
 ## 💻 JavaScript API
 

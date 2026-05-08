@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.1] - 2026-05-08
+
+### Fixed
+- **Memory Leak**: Fixed an issue where the `mousedown` event listener for closing the dropdown was never removed upon component disconnection.
+- **Global Style Collision**: Prefixed all generic class names inside the globally appended dropdown (`.item`, `.header`, `.column`, `.hidden`, etc.) with `ampm-` to strictly prevent the user's global CSS styles from bleeding in and breaking the dropdown UI.
+
 ## [1.2.0] - 2026-05-08
 
 ### Added

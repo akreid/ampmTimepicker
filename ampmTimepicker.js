@@ -11,10 +11,16 @@ class AmPmTimePicker extends HTMLElement {
     this._internals = this.attachInternals();
 
     this._handleGlobalScroll = (e) => {
-      if (!this.dropdown || this.dropdown.classList.contains('hidden')) return;
+      if (!this.dropdown || this.dropdown.classList.contains('ampm-hidden')) return;
       if (e.composedPath().includes(this.dropdown)) return;
       this.hideDropdown();
       this.commit();
+    };
+
+    this._handleDocumentMouseDown = (e) => {
+      if (this.dropdown && !this.contains(e.target) && !this.dropdown.contains(e.target)) {
+        if (!this.dropdown.classList.contains('ampm-hidden')) { this.hideDropdown(); this.commit(); }
+      }
     };
   }
 
@@ -114,6 +120,7 @@ class AmPmTimePicker extends HTMLElement {
     }
     window.removeEventListener('scroll', this._handleGlobalScroll, { capture: true });
     window.removeEventListener('resize', this._handleGlobalScroll);
+    document.removeEventListener('mousedown', this._handleDocumentMouseDown);
   }
 
   prepareData() {
@@ -307,7 +314,7 @@ class AmPmTimePicker extends HTMLElement {
   createBodyDropdown() {
     if (this.dropdown) return;
     this.dropdown = document.createElement('div');
-    this.dropdown.className = 'ampm-timepicker-dropdown hidden';
+    this.dropdown.className = 'ampm-timepicker-dropdown ampm-hidden';
 
     Object.assign(this.dropdown.style, {
       position: 'absolute',
@@ -322,47 +329,47 @@ class AmPmTimePicker extends HTMLElement {
       color: 'var(--local-text-color)'
     });
 
-    const ampmHeaderHTML = this.labelAmPm ? `<div class="header">${this.labelAmPm}</div>` : '';
+    const ampmHeaderHTML = this.labelAmPm ? `<div class="ampm-header">${this.labelAmPm}</div>` : '';
     const ampmHTML = this.useAmPm ? `
-      <div class="col-wrapper">
+      <div class="ampm-col-wrapper">
         ${ampmHeaderHTML}
-        <div class="column ampm-column" style="height:220px; overflow-y:auto; outline:none;" tabindex="0"></div>
+        <div class="ampm-column ampm-period-column" style="height:220px; overflow-y:auto; outline:none;" tabindex="0"></div>
       </div>
     ` : '';
 
-    const hourHeaderHTML = this.labelHour ? `<div class="header">${this.labelHour}</div>` : '';
-    const minHeaderHTML = this.labelMin ? `<div class="header">${this.labelMin}</div>` : '';
+    const hourHeaderHTML = this.labelHour ? `<div class="ampm-header">${this.labelHour}</div>` : '';
+    const minHeaderHTML = this.labelMin ? `<div class="ampm-header">${this.labelMin}</div>` : '';
 
     this.dropdown.innerHTML = `
       <style>
-        .ampm-timepicker-dropdown .column::-webkit-scrollbar { width: 4px; }
-        .ampm-timepicker-dropdown .column::-webkit-scrollbar-thumb { background: var(--local-scrollbar-thumb); border-radius: 4px; }
-        .ampm-timepicker-dropdown .column:focus-visible { box-shadow: inset 0 0 0 2px var(--local-primary-color); border-radius: 4px; }
-        .ampm-timepicker-dropdown .col-wrapper { flex:1; display:flex; flex-direction:column; }
-        .ampm-timepicker-dropdown .column { border-right: 1px solid var(--local-divider-color); border-right-color: color-mix(in srgb, var(--local-divider-color) 50%, transparent); }
-        .ampm-timepicker-dropdown .col-wrapper:last-child .column { border-right: none; }
-        .ampm-timepicker-dropdown .header { padding:6px; font-size:0.7em; text-align:center; background:var(--local-header-bg); color:inherit; opacity:0.5; border-bottom:1px solid var(--local-divider-color); }
-        .ampm-timepicker-dropdown .item { padding: 10px 5px; text-align: center; cursor: pointer; font-size: 1em; transition: 0.2s; user-select: none; color: inherit; }
-        .ampm-timepicker-dropdown .item:hover:not(.disabled) { background-color: var(--local-hover-bg); }
-        .ampm-timepicker-dropdown .item.active:not(.disabled) { background-color: var(--local-hover-bg); color: var(--local-primary-color); font-weight: bold; }
-        .ampm-timepicker-dropdown .item.disabled { color: var(--local-scrollbar-thumb); cursor: not-allowed; opacity: 0.5; }
-        .ampm-timepicker-dropdown.hidden { display: none !important; }
+        .ampm-timepicker-dropdown .ampm-column::-webkit-scrollbar { width: 4px; }
+        .ampm-timepicker-dropdown .ampm-column::-webkit-scrollbar-thumb { background: var(--local-scrollbar-thumb); border-radius: 4px; }
+        .ampm-timepicker-dropdown .ampm-column:focus-visible { box-shadow: inset 0 0 0 2px var(--local-primary-color); border-radius: 4px; }
+        .ampm-timepicker-dropdown .ampm-col-wrapper { flex:1; display:flex; flex-direction:column; }
+        .ampm-timepicker-dropdown .ampm-column { border-right: 1px solid var(--local-divider-color); border-right-color: color-mix(in srgb, var(--local-divider-color) 50%, transparent); }
+        .ampm-timepicker-dropdown .ampm-col-wrapper:last-child .ampm-column { border-right: none; }
+        .ampm-timepicker-dropdown .ampm-header { padding:6px; font-size:0.7em; text-align:center; background:var(--local-header-bg); color:inherit; opacity:0.5; border-bottom:1px solid var(--local-divider-color); }
+        .ampm-timepicker-dropdown .ampm-item { padding: 10px 5px; text-align: center; cursor: pointer; font-size: 1em; transition: 0.2s; user-select: none; color: inherit; }
+        .ampm-timepicker-dropdown .ampm-item:hover:not(.ampm-disabled) { background-color: var(--local-hover-bg); }
+        .ampm-timepicker-dropdown .ampm-item.ampm-active:not(.ampm-disabled) { background-color: var(--local-hover-bg); color: var(--local-primary-color); font-weight: bold; }
+        .ampm-timepicker-dropdown .ampm-item.ampm-disabled { color: var(--local-scrollbar-thumb); cursor: not-allowed; opacity: 0.5; }
+        .ampm-timepicker-dropdown.ampm-hidden { display: none !important; }
       </style>
       ${ampmHTML}
-      <div class="col-wrapper">
+      <div class="ampm-col-wrapper">
         ${hourHeaderHTML}
-        <div class="column hour-column" style="height:220px; overflow-y:auto; outline:none;" tabindex="0"></div>
+        <div class="ampm-column ampm-hour-column" style="height:220px; overflow-y:auto; outline:none;" tabindex="0"></div>
       </div>
-      <div class="col-wrapper" style="border-right: none;">
+      <div class="ampm-col-wrapper" style="border-right: none;">
         ${minHeaderHTML}
-        <div class="column minute-column" style="height:220px; overflow-y:auto; outline:none;" tabindex="0"></div>
+        <div class="ampm-column ampm-minute-column" style="height:220px; overflow-y:auto; outline:none;" tabindex="0"></div>
       </div>
     `;
 
     document.body.appendChild(this.dropdown);
-    this.hourCol = this.dropdown.querySelector('.hour-column');
-    this.minCol = this.dropdown.querySelector('.minute-column');
-    if (this.useAmPm) this.ampmCol = this.dropdown.querySelector('.ampm-column');
+    this.hourCol = this.dropdown.querySelector('.ampm-hour-column');
+    this.minCol = this.dropdown.querySelector('.ampm-minute-column');
+    if (this.useAmPm) this.ampmCol = this.dropdown.querySelector('.ampm-period-column');
 
     this.renderList(this.hours, this.hourCol, 'hour');
     this.renderList(this.minutes, this.minCol, 'minute');
@@ -386,7 +393,7 @@ class AmPmTimePicker extends HTMLElement {
     this.toggleBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       if (this.disabled || this.readOnly) return;
-      this.dropdown?.classList.contains('hidden') === false ? (this.hideDropdown(), this.commit()) : (this.input.focus(), this.showDropdown());
+      this.dropdown?.classList.contains('ampm-hidden') === false ? (this.hideDropdown(), this.commit()) : (this.input.focus(), this.showDropdown());
     });
 
     this.input.addEventListener('focus', () => {
@@ -413,7 +420,7 @@ class AmPmTimePicker extends HTMLElement {
 
       // 인풋에서 Tab: 드롭다운 내부로 강제 진입
       else if (e.key === 'Tab' && !e.shiftKey) {
-        if (this.dropdown && !this.dropdown.classList.contains('hidden')) {
+        if (this.dropdown && !this.dropdown.classList.contains('ampm-hidden')) {
           e.preventDefault();
           (this.ampmCol || this.hourCol).focus();
         }
@@ -422,11 +429,7 @@ class AmPmTimePicker extends HTMLElement {
 
     this.input.addEventListener('blur', () => this.commit());
 
-    document.addEventListener('mousedown', (e) => {
-      if (this.dropdown && !this.contains(e.target) && !this.dropdown.contains(e.target)) {
-        if (!this.dropdown.classList.contains('hidden')) { this.hideDropdown(); this.commit(); }
-      }
-    });
+    document.addEventListener('mousedown', this._handleDocumentMouseDown);
   }
 
   positionDropdown() {
@@ -459,7 +462,7 @@ class AmPmTimePicker extends HTMLElement {
   showDropdown() {
     if (this._checkIcon) this._checkIcon(); // 드롭다운 열 때 다시 한 번 검증
     if (!this.dropdown) this.createBodyDropdown();
-    this.dropdown.classList.remove('hidden');
+    this.dropdown.classList.remove('ampm-hidden');
     this.positionDropdown();
     this.syncScrollAndHighlight();
     window.addEventListener('scroll', this._handleGlobalScroll, { capture: true, passive: true });
@@ -484,12 +487,12 @@ class AmPmTimePicker extends HTMLElement {
     container.innerHTML = '';
     data.forEach(val => {
       const div = document.createElement('div');
-      div.className = 'item';
+      div.className = 'ampm-item';
       div.textContent = val;
       div.onmousedown = (e) => e.preventDefault();
       div.onclick = (e) => {
         e.stopPropagation();
-        if (!div.classList.contains('disabled')) this.selectValue(val, type, true);
+        if (!div.classList.contains('ampm-disabled')) this.selectValue(val, type, true);
       };
       container.appendChild(div);
     });
@@ -510,31 +513,31 @@ class AmPmTimePicker extends HTMLElement {
 
     const currH24 = Math.floor(total / 60);
     if (this.ampmCol) {
-      Array.from(this.ampmCol.querySelectorAll('.item')).forEach(i => {
+      Array.from(this.ampmCol.querySelectorAll('.ampm-item')).forEach(i => {
         const isP = i.textContent === 'PM';
-        i.classList.toggle('disabled', !(this.startMin <= (isP ? 1439 : 719) && this.endMin >= (isP ? 720 : 0)));
+        i.classList.toggle('ampm-disabled', !(this.startMin <= (isP ? 1439 : 719) && this.endMin >= (isP ? 720 : 0)));
       });
     }
-    Array.from(this.hourCol.querySelectorAll('.item')).forEach(i => {
+    Array.from(this.hourCol.querySelectorAll('.ampm-item')).forEach(i => {
       let th = parseInt(i.textContent);
       if (this.useAmPm) {
-        const isP = this.ampmCol?.querySelector('.active')?.textContent === 'PM';
+        const isP = this.ampmCol?.querySelector('.ampm-active')?.textContent === 'PM';
         th = (th % 12) + (isP ? 12 : 0);
       }
-      i.classList.toggle('disabled', !(this.startMin <= (th * 60 + 59) && this.endMin >= (th * 60)));
+      i.classList.toggle('ampm-disabled', !(this.startMin <= (th * 60 + 59) && this.endMin >= (th * 60)));
     });
-    Array.from(this.minCol.querySelectorAll('.item')).forEach(i => {
+    Array.from(this.minCol.querySelectorAll('.ampm-item')).forEach(i => {
       const t = currH24 * 60 + parseInt(i.textContent);
-      i.classList.toggle('disabled', !(t >= this.startMin && t <= this.endMin));
+      i.classList.toggle('ampm-disabled', !(t >= this.startMin && t <= this.endMin));
     });
   }
 
   scrollToTarget(value, type) {
     const col = type === 'hour' ? this.hourCol : (type === 'minute' ? this.minCol : this.ampmCol);
-    const target = Array.from(col.querySelectorAll('.item')).find(i => i.textContent === value);
-    Array.from(col.querySelectorAll('.item')).forEach(i => i.classList.remove('active'));
+    const target = Array.from(col.querySelectorAll('.ampm-item')).find(i => i.textContent === value);
+    Array.from(col.querySelectorAll('.ampm-item')).forEach(i => i.classList.remove('ampm-active'));
     if (target) {
-      target.classList.add('active');
+      target.classList.add('ampm-active');
       col.scrollTop = target.offsetTop - col.offsetTop - (col.clientHeight / 2) + (target.clientHeight / 2);
     }
   }
@@ -636,8 +639,8 @@ class AmPmTimePicker extends HTMLElement {
   }
 
   navigateColumn(col, type, dir) {
-    const items = Array.from(col.querySelectorAll('.item:not(.disabled)'));
-    const currentActive = col.querySelector('.item.active');
+    const items = Array.from(col.querySelectorAll('.ampm-item:not(.ampm-disabled)'));
+    const currentActive = col.querySelector('.ampm-item.ampm-active');
     let nextIndex = (items.indexOf(currentActive) + dir + items.length) % items.length;
     this.selectValue(items[nextIndex].textContent, type, false);
   }

@@ -34,7 +34,7 @@ yarn add @akreid/ampm-timepicker
 <head>
   <title>AmPmTimePicker Demo</title>
   <!-- Import the component as a module -->
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.1.3/ampmTimepicker.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.2.1/ampmTimepicker.js"></script>
 </head>
 <body>
   <!-- Usage example -->
@@ -48,8 +48,8 @@ yarn add @akreid/ampm-timepicker
 You can use it immediately by adding a `<script>` tag to your HTML file. It is recommended to use a file path that includes the version number.
 
 ```html
-<!-- Include script (Version: 1.1.3) -->
-<script src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.1.3/ampmTimepicker.js"></script>
+<!-- Include script (Version: 1.2.1) -->
+<script src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.2.1/ampmTimepicker.js"></script>
 
 <!-- Basic usage -->
 <time-picker></time-picker>
@@ -136,7 +136,7 @@ The dropdown list is appended to `document.body`. To style the dropdown items gl
 
 ```css
 /* Example: Change hover background color */
-.ampm-timepicker-dropdown .item:hover {
+.ampm-timepicker-dropdown .ampm-item:hover {
   background-color: #ffcccc !important;
 }
 ```

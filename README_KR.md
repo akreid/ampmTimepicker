@@ -29,7 +29,7 @@ yarn add @akreid/ampm-timepicker
 <head>
   <title>AmPmTimePicker</title>
   <!-- 최상위 컴포넌트만 임포트 (필요 시: :use-ampm, :interval 등 속성을 사용하여 모드 커스텀 가능) -->
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.1.3/ampmTimepicker.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.2.1/ampmTimepicker.js"></script>
 </head>
 <body>
   <!-- 사용 예시 -->
@@ -43,8 +43,8 @@ yarn add @akreid/ampm-timepicker
 HTML 파일에 `<script>` 태그를 추가하여 바로 사용할 수 있습니다. CDN을 사용할 때는 버전 번호가 포함된 파일 경로를 사용하는 것이 좋습니다.
 
 ```html
-<!-- 스크립트 추가 (버전: 1.1.3) -->
-<script src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.1.3/ampmTimepicker.js"></script>
+<!-- 스크립트 추가 (버전: 1.2.1) -->
+<script src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.2.1/ampmTimepicker.js"></script>
 
 <!-- 기본 사용 -->
 <time-picker></time-picker>
@@ -131,7 +131,7 @@ time-picker::part(input) {
 
 ```css
 /* 드롭다운 호버 색상 직접 변경 예시 */
-.ampm-timepicker-dropdown .item:hover {
+.ampm-timepicker-dropdown .ampm-item:hover {
   background-color: #ffcccc !important;
 }
 ```

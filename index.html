@@ -40,7 +40,7 @@
         }
 
         /* Force component to light mode when page is in light mode (if OS is dark) */
-        [data-theme="light"] time-picker {
+        :where([data-theme="light"]) time-picker {
             --ampm-bg-hover: #f1f7ff;
             --ampm-primary-color: #007bff;
             --ampm-dropdown-header-bg: rgba(0, 0, 0, 0.04);
@@ -50,7 +50,7 @@
         }
 
         /* Force component to dark mode when page is in dark mode (if OS is light) */
-        [data-theme="dark"] time-picker {
+        :where([data-theme="dark"]) time-picker {
             --ampm-bg-hover: rgba(255, 255, 255, 0.1);
             --ampm-primary-color: #4da3ff;
             --ampm-dropdown-header-bg: rgba(255, 255, 255, 0.05);
@@ -246,7 +246,7 @@
             --ampm-bg-color: #f0f0ff;
         }
 
-        [data-theme="dark"] .custom-styled {
+        :where([data-theme="dark"]) .custom-styled {
             --ampm-bg-color: #1a1a2e;
         }
 
@@ -345,7 +345,7 @@
                 <div class="demo-item">
                     <label>Purple Theme with Rounded Corners</label>
                     <time-picker class="custom-styled"></time-picker>
-                    <pre>
+<pre>
 .custom-styled {
   --ampm-primary-color: #6c5ce7;
   --ampm-border-radius: 20px;

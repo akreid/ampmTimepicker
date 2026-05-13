@@ -22,11 +22,6 @@
             color-scheme: light;
         }
 
-        time-picker {
-            --ampm-border-color: var(--border);
-            --ampm-dropdown-divider-color: var(--border);
-        }
-
         [data-theme="dark"] {
             --primary: #2ecc71;
             --primary-hover: #27ae60;
@@ -39,25 +34,7 @@
             color-scheme: dark;
         }
 
-        /* Force component to light mode when page is in light mode (if OS is dark) */
-        :where([data-theme="light"]) time-picker {
-            --ampm-bg-hover: #f1f7ff;
-            --ampm-primary-color: #007bff;
-            --ampm-dropdown-header-bg: rgba(0, 0, 0, 0.04);
-            --ampm-dropdown-scrollbar-thumb: #ccc;
-            --ampm-disabled-bg: #ddd;
-            --ampm-readonly-bg: #f0f0f0;
-        }
 
-        /* Force component to dark mode when page is in dark mode (if OS is light) */
-        :where([data-theme="dark"]) time-picker {
-            --ampm-bg-hover: rgba(255, 255, 255, 0.1);
-            --ampm-primary-color: #4da3ff;
-            --ampm-dropdown-header-bg: rgba(255, 255, 255, 0.05);
-            --ampm-dropdown-scrollbar-thumb: #555;
-            --ampm-disabled-bg: #444;
-            --ampm-readonly-bg: #2a2a2a;
-        }
 
         /* Theme Switch CSS */
         .theme-switch-wrapper {
@@ -243,26 +220,65 @@
         .custom-styled {
             --ampm-primary-color: #6c5ce7;
             --ampm-border-radius: 20px;
-            --ampm-bg-color: #f0f0ff;
         }
 
-        :where([data-theme="dark"]) .custom-styled {
-            --ampm-bg-color: #1a1a2e;
+        .custom-styled::part(container) {
+            background-color: #f0f0ff;
         }
 
-        /* Advanced style example (::part) */
-        .advanced-styled::part(input) {
+        :where([data-theme="dark"]) .custom-styled::part(container) {
+            background-color: #1a1a2e;
+        }
+
+        /* Advanced Neon style example (::part + dropdown-class) */
+        .neon-styled {
+            --ampm-primary-color: #ff5e00;
+            --ampm-border-radius: 20px;
+        }
+
+        .neon-styled::part(container) {
+            background-color: #111;
+            border: 2px solid #ff5e00;
+            box-shadow: 0 4px 10px rgba(255, 94, 0, 0.6);
+        }
+
+        .neon-styled::part(input) {
             text-align: center;
             font-weight: bold;
-            color: var(--primary);
+            color: #ff5e00;
         }
 
-        .advanced-styled::part(toggle-btn) {
-            background-color: rgba(0, 0, 0, 0.05);
+        .neon-styled::part(toggle-btn) {
+            background-color: #ff5e00;
+            color: #111;
+            border-left: none;
         }
 
-        [data-theme="dark"] .advanced-styled::part(toggle-btn) {
-            background-color: rgba(255, 255, 255, 0.1);
+        /* Dropdown custom class example (Neon theme) */
+        .neon-dropdown {
+            border: 2px solid #ff5e00;
+            background-color: #111;
+            box-shadow: 0 0 15px rgba(255, 94, 0, 0.4);
+            color: #ff5e00;
+        }
+
+        .neon-dropdown .ampm-header {
+            background-color: #222;
+            color: #ff5e00;
+            border-bottom: 1px solid #ff5e00;
+        }
+
+        .neon-dropdown .ampm-column {
+            border-right-color: rgba(255, 94, 0, 0.3);
+        }
+
+        .neon-dropdown .ampm-item:hover {
+            background-color: rgba(255, 94, 0, 0.2);
+        }
+
+        .neon-dropdown .ampm-item.ampm-active {
+            color: #111;
+            background-color: #ff5e00;
         }
     </style>
 </head>
@@ -297,6 +313,11 @@
                     </div>
                 </div>
                 <div class="demo-item">
+                    <label>Hidden Toggle Button</label>
+                    <time-picker hide-button value="09:00"></time-picker>
+                    <div class="code-snippet">&lt;time-picker hide-button value="09:00"&gt;&lt;/time-picker&gt;</div>
+                </div>
+                <div class="demo-item">
                     <label>Custom Labels & Interval (15m)</label>
                     <time-picker use-ampm="true" interval="15" hour-label="HH" min-label="MM" ampm-label="AM/PM">
                     </time-picker>
@@ -323,51 +344,7 @@
         </section>
 
         <section>
-            <h2>3. Form Integration</h2>
-            <p>This component supports <code>ElementInternals</code>, allowing it to work seamlessly with native HTML
-                forms.</p>
-            <form id="demoForm" class="form-example">
-                <div class="demo-item">
-                    <label for="booking-time">Booking Time (Required):</label>
-                    <time-picker name="booking-time" required use-ampm="true"></time-picker>
-                    <div class="code-snippet">&lt;time-picker name="booking-time" required
-                        use-ampm="true"&gt;&lt;/time-picker&gt;</div>
-                </div>
-                <button type="submit" class="btn">Submit Form</button>
-            </form>
-            <div id="formOutput" class="status-box">Form Data: Waiting for submission...</div>
-        </section>
-
-        <section>
-            <h2>4. Custom Styling</h2>
-            <p>Customize the appearance using CSS Custom Properties.</p>
-            <div class="demo-grid">
-                <div class="demo-item">
-                    <label>Purple Theme with Rounded Corners</label>
-                    <time-picker class="custom-styled"></time-picker>
-<pre>
-.custom-styled {
-  --ampm-primary-color: #6c5ce7;
-  --ampm-border-radius: 20px;
-  --ampm-bg-color: #f0f0ff;
-}
-
-/* Dark mode override */
-[data-theme="dark"] .custom-styled {
-  --ampm-bg-color: #1a1a2e;
-}</pre>
-                </div>
-                <div class="demo-item">
-                    <label>Custom Invalid Color (Required & Empty)</label>
-                    <time-picker style="--ampm-invalid-color: #ff9800;" required></time-picker>
-                    <div class="code-snippet">&lt;time-picker style="--ampm-invalid-color: #ff9800;"
-                        required&gt;&lt;/time-picker&gt;</div>
-                </div>
-            </div>
-        </section>
-
-        <section>
-            <h2>5. Time Range & Constraints</h2>
+            <h2>3. Time Range & Constraints</h2>
             <p>Restrict selectable time ranges using <code>start-time</code> and <code>end-time</code> attributes.</p>
             <div class="demo-grid">
                 <div class="demo-item">
@@ -391,24 +368,103 @@
         </section>
 
         <section>
-            <h2>6. Advanced Styling (::part)</h2>
-            <p>Customize internal elements (like the input or toggle button) directly using the <code>::part()</code>
-                selector.</p>
+            <h2>4. Custom Styling</h2>
+            <p>Customize the appearance using CSS Custom Properties.</p>
             <div class="demo-grid">
                 <div class="demo-item">
-                    <label>Customized Input & Button</label>
-                    <time-picker class="advanced-styled" value="12:00"></time-picker>
+                    <label>Purple Theme with Rounded Corners</label>
+                    <time-picker class="custom-styled"></time-picker>
                     <pre>
-.advanced-styled::part(input) {
-  text-align: center;
-  font-weight: bold;
-  color: var(--primary);
+.custom-styled {
+  --ampm-primary-color: #6c5ce7;
+  --ampm-border-radius: 20px;
 }
-.advanced-styled::part(toggle-btn) {
-  background-color: rgba(0,0,0,0.05);
+
+.custom-styled::part(container) {
+  background-color: #f0f0ff;
+}
+
+/* Dark mode override */
+[data-theme="dark"] .custom-styled::part(container) {
+  background-color: #1a1a2e;
+}</pre>
+                </div>
+                <div class="demo-item">
+                    <label>Custom Invalid Color (Required & Empty)</label>
+                    <time-picker style="--ampm-invalid-color: #ff9800;" required></time-picker>
+                    <div class="code-snippet">&lt;time-picker style="--ampm-invalid-color: #ff9800;"
+                        required&gt;&lt;/time-picker&gt;</div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>5. Advanced Styling (::part & States)</h2>
+            <p>Customize internal elements directly using the <code>::part()</code> selector and attribute selectors.
+            </p>
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <label>Extreme Customization (Neon Theme)</label>
+                    <time-picker class="neon-styled" dropdown-class="neon-dropdown" value="12:00"></time-picker>
+                    <pre>
+&lt;time-picker class="neon-styled" 
+             dropdown-class="neon-dropdown"&gt;
+
+/* Host styling (::part) */
+.neon-styled {
+    --ampm-primary-color: #ff5e00;
+    --ampm-border-radius: 20px;
+}
+.neon-styled::part(container) {
+  background-color: #111;
+  border: 2px solid #ff5e00;
+  box-shadow: 0 4px 10px rgba(255, 94, 0, 0.6);
+}
+.neon-styled::part(input) { color: #ff5e00; }
+.neon-styled::part(toggle-btn) {
+  background-color: #ff5e00; color: #111;
+}
+
+/* Dropdown styling */
+.neon-dropdown {
+  background-color: #111;
+  border: 2px solid #ff5e00;
+  color: #ff5e00;
+}
+.neon-dropdown .ampm-header {
+  background-color: #222;
+  border-bottom: 1px solid #ff5e00;
+}
+.neon-dropdown .ampm-item.ampm-active {
+  background-color: #ff5e00; color: #111;
+}</pre>
+                </div>
+                <div class="demo-item">
+                    <label>Disabled State Direct Override</label>
+                    <time-picker class="state-styled" disabled value="14:00"></time-picker>
+                    <pre>
+.state-styled[disabled]::part(container) {
+  background-color: #ffeaa7;
+  border-color: #fdcb6e;
 }</pre>
                 </div>
             </div>
+        </section>
+
+        <section>
+            <h2>6. Form Integration</h2>
+            <p>This component supports <code>ElementInternals</code>, allowing it to work seamlessly with native HTML
+                forms.</p>
+            <form id="demoForm" class="form-example">
+                <div class="demo-item">
+                    <label for="booking-time">Booking Time (Required):</label>
+                    <time-picker name="booking-time" required use-ampm="true"></time-picker>
+                    <div class="code-snippet">&lt;time-picker name="booking-time" required
+                        use-ampm="true"&gt;&lt;/time-picker&gt;</div>
+                </div>
+                <button type="submit" class="btn">Submit Form</button>
+            </form>
+            <div id="formOutput" class="status-box">Form Data: Waiting for submission...</div>
         </section>
 
         <footer>

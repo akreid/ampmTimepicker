@@ -66,6 +66,7 @@ You can control the picker's behavior and display format by adding attributes to
 | `start-time` | `string` | `00:00` | The minimum selectable time (Format: `HH:mm`, based on 24-hour format) |
 | `end-time` | `string` | `23:59` | The maximum selectable time (Format: `HH:mm`, based on 24-hour format) |
 | `margin-right`| `string` | `0px` | Sets the right margin. (e.g., `10px`) |
+| `hide-button` | `boolean`| `false` | When set to `true`, hides the dropdown toggle (arrow) button on the right. |
 | `hour-label` | `string` | `null` | The label displayed at the top of the Hour column in the dropdown |
 | `min-label` | `string` | `null` | The label displayed at the top of the Minute column in the dropdown |
 | `ampm-label` | `string` | `null` | The label displayed at the top of the AM/PM column in the dropdown |
@@ -101,45 +102,88 @@ You can override the default colors using the following CSS variables. (Old vari
 | `--ampm-width` | `165px` | The total width of the input form |
 | `--ampm-height` | `42px` | The total height of the input form |
 | `--ampm-border-radius`| `8px` | The border-radius for all corners |
-| `--ampm-bg-color` | `Field` (System Color)| Background color |
-| `--ampm-font-color` | `FieldText` (System Color)| Text color |
-| `--ampm-primary-color`| `#007bff` / `#4da3ff` (Dark) | Outline color on focus and active list item color |
-| `--ampm-border-color` | `ButtonBorder` (System Color)| Border line color |
-| `--ampm-invalid-color`| `#dc3545` | Color when the component is invalid |
-| `--ampm-disabled-bg` | `#ddd` / `#444` (Dark) | Background color when disabled |
-| `--ampm-disabled-opacity`| `0.6` | Opacity of the component when disabled |
-| `--ampm-readonly-bg` | `#f0f0f0` / `#2a2a2a` (Dark) | Background color when readonly |
-| `--ampm-dropdown-bg` | `var(--ampm-bg-color)` | Dropdown background color |
-| `--ampm-dropdown-text-color`| `var(--ampm-font-color)` | Dropdown text color |
-| `--ampm-dropdown-border-color`| `var(--ampm-border-color)` | Dropdown outer border color |
-| `--ampm-dropdown-hover-bg` | `var(--ampm-bg-hover)` | Dropdown item hover background color |
-| `--ampm-dropdown-header-bg` | `rgba(0,0,0,0.04)` | Dropdown column header background |
-| `--ampm-dropdown-divider-color`| `#eee` / `#444` (Dark) | Dropdown internal column divider lines |
-| `--ampm-dropdown-scrollbar-thumb`| `#ccc` / `#555` (Dark) | Dropdown scrollbar thumb color |
+| `--ampm-primary-color`| `#007bff` / `#4da3ff` (Dark) | Outline color on focus and active list item (hover/focus) color |
 
-### 2. Internal Element Control (`::part`)
-For more granular control (like paddings or font weights), use the `::part` selector.
+### 2. Internal Element & State Control (`::part`, Attribute Selectors)
+For more granular control (like the toggle button styling) or overriding specific states (`disabled`, `readonly`), combine `::part()` with attribute selectors.
 - `part="container"`: The main wrapper container
 - `part="input"`: The internal text input
 - `part="toggle-btn"`: The dropdown toggle button
 
 ```css
-/* Example: Change input padding and alignment */
-time-picker::part(input) {
-  padding-left: 20px;
-  text-align: center;
+/* 1. Customizing the toggle button's border and icon */
+time-picker::part(toggle-btn) {
+  border-left: 2px dashed #ccc;
+  background-image: url('custom-icon.svg');
+}
+
+/* 2. Forcing a custom background color when disabled (without using variables) */
+time-picker[disabled]::part(container) {
+  background-color: #ffe6e6;
+  border-color: #ff0000;
 }
 ```
 
-### 3. Dropdown Global Styling
-The dropdown list is appended to `document.body`. To style the dropdown items globally, use the `.ampm-timepicker-dropdown` class.
+### 3. Dropdown Scoped Styling Guide
+The dropdown list is dynamically appended to the bottom of `document.body` to prevent clipping issues. For custom styling, refer to the internal DOM structure of the dropdown below:
 
+#### 🏗️ Dropdown DOM Structure Tree
+```text
+div.ampm-timepicker-dropdown
+├── div.ampm-col-wrapper
+│   ├── div.ampm-header (AM/PM Header)
+│   └── div.ampm-column.ampm-period-column
+│       ├── div.ampm-item.ampm-active ("AM")
+│       └── div.ampm-item ("PM")
+├── div.ampm-col-wrapper
+│   ├── div.ampm-header (Hour Header)
+│   └── div.ampm-column.ampm-hour-column
+│       ├── div.ampm-item ("12")
+│       └── ...
+└── div.ampm-col-wrapper
+    ├── div.ampm-header (Minute Header)
+    └── div.ampm-column.ampm-minute-column
+        ├── div.ampm-item ("00")
+        └── ...
+```
+
+Because it is appended globally, custom classes applied directly to the component do not automatically affect the dropdown. To solve this, we provide two powerful synchronization options:
+
+#### 1) Explicit Custom Class (`dropdown-class` attribute)
+If you want to style the dropdown of a specific time picker instance, use the `dropdown-class` attribute. The class you provide will be injected directly into the dynamically created dropdown element.
+```html
+<time-picker dropdown-class="my-pink-theme"></time-picker>
+```
 ```css
-/* Example: Change hover background color */
-.ampm-timepicker-dropdown .ampm-item:hover {
-  background-color: #ffcccc !important;
-}
+/* Target this specific dropdown safely in your global CSS */
+.my-pink-theme { border: 2px solid pink; }
+.my-pink-theme .ampm-header { background-color: #ffe6e6; }
 ```
+
+#### 2) Vue/Svelte Scoped CSS Auto-Support (`data-*` Syncing)
+When using `<style scoped>` in frameworks like Vue or Svelte, the framework injects a unique hash (e.g., `data-v-1a2b3c`) into your elements.
+`AmPmTimePicker` automatically **syncs all `data-` attributes** from the `<time-picker>` tag directly to the appended dropdown. Therefore, framework developers can use scoped CSS seamlessly without any extra configuration!
+
+### 4. ⚠️ Deprecated CSS Variables
+The following highly specific CSS variables are scheduled to be **completely removed in the next major version (v2.0)** for optimization and standard compliance. While they will continue to work for now (via fallback), it is highly recommended to migrate your styles using the `::part()` selector approach explained above.
+
+| Deprecated Variable | Migration Guide (Recommended Alternative) |
+| :--- | :--- |
+| `--ampm-bg-color` | Use `time-picker::part(container) { background-color: ... }` |
+| `--ampm-font-color` | Use `time-picker { color: ... }` |
+| `--ampm-border-color` | Use `time-picker::part(container) { border-color: ... }` |
+| `--ampm-toggle-border-left` | Use `time-picker::part(toggle-btn) { border-left: ... }` |
+| `--ampm-toggle-icon-url` | Use `time-picker::part(toggle-btn) { background-image: ... }` |
+| `--ampm-toggle-icon-size` | Use `time-picker::part(toggle-btn) { background-size: ... }` |
+| `--ampm-invalid-color` | Use `time-picker:invalid::part(container) { border-color: ... }` |
+| `--ampm-disabled-bg` | Use `time-picker[disabled]::part(container) { background-color: ... }` |
+| `--ampm-disabled-opacity` | Use `time-picker[disabled] { opacity: ... }` |
+| `--ampm-readonly-bg` | Use `time-picker[readonly]::part(container) { background-color: ... }` |
+| `--ampm-dropdown-bg`<br>`--ampm-dropdown-text-color`<br>`--ampm-dropdown-border-color` | Use global class:<br>`.ampm-timepicker-dropdown { background-color: ...; color: ...; border-color: ...; }` |
+| `--ampm-bg-hover`<br>`--ampm-dropdown-hover-bg` | Use `.ampm-timepicker-dropdown .ampm-item:hover { background-color: ... }` |
+| `--ampm-dropdown-header-bg` | Use `.ampm-timepicker-dropdown .ampm-header { background-color: ... }` |
+| `--ampm-dropdown-divider-color` | Use `.ampm-timepicker-dropdown .ampm-column { border-right-color: ... }`<br>`.ampm-timepicker-dropdown .ampm-header { border-bottom-color: ... }` |
+| `--ampm-dropdown-scrollbar-thumb` | Use `.ampm-timepicker-dropdown .ampm-column::-webkit-scrollbar-thumb { background: ... }` |
 
 > **Note**: If you want to disable automatic dark mode and force a light theme, add `:root { --ampm-bg-color: #ffffff; --ampm-font-color: #333333; }` to your global stylesheet.
 
@@ -207,6 +251,7 @@ This component is designed to be fully operable using a keyboard, in addition to
   - When the dropdown is open, pressing the `←` or `→` keys will switch focus between the AM/PM, Hour, and Minute columns.
   - Within each column, use the `↑` or `↓` keys to navigate through the values.
 - **Tab Focus Control**: Pressing the `Tab` key within the dropdown smoothly moves the focus to the next element. Logic is applied to prevent the browser address bar from capturing the focus (a common Shadow DOM focus trap issue).
+- **Mobile Touch Optimization**: On touch devices, the virtual keyboard is automatically disabled (`inputmode="none"`) upon focus, preventing the screen from being obscured and allowing for a comfortable dropdown scrolling experience.
 - **Screen Scroll Synchronization**: Scrolling the browser window while the dropdown is open will automatically close the dropdown and commit the currently selected value.
 
 ## 📝 Changelog

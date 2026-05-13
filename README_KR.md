@@ -61,6 +61,7 @@ HTML 파일에 `<script>` 태그를 추가하여 바로 사용할 수 있습니�
 | `start-time` | `string` | `00:00` | 선택 가능한 최소 시간 (형식: `HH:mm`, 24시간제 기준) |
 | `end-time` | `string` | `23:59` | 선택 가능한 최대 시간 (형식: `HH:mm`, 24시간제 기준) |
 | `margin-right`| `string` | `0px` | 우측 여백을 설정합니다. (예: `10px`) |
+| `hide-button` | `boolean`| `false` | `true`로 설정 시 우측의 드롭다운 호출(화살표) 버튼을 숨깁니다. |
 | `hour-label` | `string` | `null` | 드롭다운의 시간(Hour) 컬럼 상단에 표시될 라벨 |
 | `min-label` | `string` | `null` | 드롭다운의 분(Minute) 컬럼 상단에 표시될 라벨 |
 | `ampm-label` | `string` | `null` | 드롭다운의 AM/PM 컬럼 상단에 표시될 라벨 |
@@ -96,45 +97,88 @@ HTML 파일에 `<script>` 태그를 추가하여 바로 사용할 수 있습니�
 | `--ampm-width` | `165px` | 폼의 전체 너비 |
 | `--ampm-height` | `42px` | 폼의 전체 높이 |
 | `--ampm-border-radius`| `8px` | 폼 및 드롭다운 모서리 둥글기 |
-| `--ampm-bg-color` | `Field` (OS 테마) | 컴포넌트 내부 및 드롭다운 배경색 |
-| `--ampm-font-color` | `FieldText` (OS 테마) | 텍스트 색상 |
-| `--ampm-primary-color`| `#007bff` / `#4da3ff` (다크모드) | 포커스 시 외곽선 및 활성 목록 색상 |
-| `--ampm-border-color` | `ButtonBorder` (OS 테마)| 테두리 선 색상 |
-| `--ampm-invalid-color`| `#dc3545` | 검증 실패 시 색상 |
-| `--ampm-disabled-bg` | `#ddd` / `#444` (다크모드) | 비활성화(disabled) 상태일 때 배경색 |
-| `--ampm-disabled-opacity`| `0.6` | 비활성화 상태일 때 투명도 |
-| `--ampm-readonly-bg` | `#f0f0f0` / `#2a2a2a` (다크모드) | 읽기 전용(readonly) 상태일 때 배경색 |
-| `--ampm-dropdown-bg` | `var(--ampm-bg-color)` | 드롭다운 배경색 |
-| `--ampm-dropdown-text-color`| `var(--ampm-font-color)` | 드롭다운 텍스트 색상 |
-| `--ampm-dropdown-border-color`| `var(--ampm-border-color)` | 드롭다운 외곽 테두리 색상 |
-| `--ampm-dropdown-hover-bg` | `var(--ampm-bg-hover)` | 드롭다운 아이템 호버 시 배경색 |
-| `--ampm-dropdown-header-bg` | `rgba(0,0,0,0.04)` | 드롭다운 컬럼 상단(AM/PM, 시, 분) 배경색 |
-| `--ampm-dropdown-divider-color`| `#eee` / `#444` (다크모드) | 드롭다운 내부 열 구분선 및 하단 구분선 |
-| `--ampm-dropdown-scrollbar-thumb`| `#ccc` / `#555` (다크모드) | 드롭다운 스크롤바 색상 |
+| `--ampm-primary-color`| `#007bff` / `#4da3ff` (다크모드) | 포커스 시 외곽선 및 활성 목록(호버, 포커스) 색상 |
 
-### 2. 컴포넌트 내부 세부 제어 (`::part`)
-더 세밀한 조작(패딩, 폰트 굵기 등)이 필요하다면 `::part` 선택자를 사용하세요.
+### 2. 컴포넌트 내부 및 상태별 세부 제어 (`::part`, 속성 선택자)
+더 세밀한 조작(토글 버튼 꾸미기)이나 특정 상태(`disabled`, `readonly` 등)를 강제로 제어하려면 `::part()` 선택자와 속성 선택자를 조합하세요.
 - `part="container"`: 전체 테두리를 감싸는 컨테이너
 - `part="input"`: 실제 입력이 이루어지는 Input 영역
 - `part="toggle-btn"`: 우측 화살표 토글 버튼
 
 ```css
-/* Input 내부 패딩 및 글자 정렬 변경 예시 */
-time-picker::part(input) {
-  padding-left: 20px;
-  text-align: center;
+/* 1. 토글 버튼의 테두리, 배경 이미지 커스텀 */
+time-picker::part(toggle-btn) {
+  border-left: 2px dashed #ccc;
+  background-image: url('custom-icon.svg');
+}
+
+/* 2. Disabled 상태일 때 컨테이너 배경색 직접 지정 (변수 없이) */
+time-picker[disabled]::part(container) {
+  background-color: #ffe6e6;
+  border-color: #ff0000;
 }
 ```
 
-### 3. 드롭다운(Dropdown) 전역 클래스 제어
-타임피커의 드롭다운은 `document.body`에 생성됩니다. 드롭다운 목록의 스타일을 세밀하게 제어하고 싶다면 `.ampm-timepicker-dropdown` 클래스를 활용하세요.
+### 3. 드롭다운(Dropdown) 스코프 스타일링 가이드
+타임피커의 드롭다운은 화면 잘림 방지를 위해 `document.body` 최하단에 동적으로 생성됩니다. 커스텀 스타일링을 위해 드롭다운의 내부 DOM 구조를 먼저 확인하세요.
 
+#### 🏗️ 드롭다운 내부 DOM 구조 (구조도)
+```text
+div.ampm-timepicker-dropdown
+├── div.ampm-col-wrapper
+│   ├── div.ampm-header (AM/PM 헤더)
+│   └── div.ampm-column.ampm-period-column
+│       ├── div.ampm-item.ampm-active ("AM")
+│       └── div.ampm-item ("PM")
+├── div.ampm-col-wrapper
+│   ├── div.ampm-header (Hour 헤더)
+│   └── div.ampm-column.ampm-hour-column
+│       ├── div.ampm-item ("12")
+│       └── ...
+└── div.ampm-col-wrapper
+    ├── div.ampm-header (Minute 헤더)
+    └── div.ampm-column.ampm-minute-column
+        ├── div.ampm-item ("00")
+        └── ...
+```
+
+위와 같이 `<body>`에 직접 생성되기 때문에, 컴포넌트에 직접 부여한 클래스가 드롭다운에 영향을 미치지 않는 현상이 발생합니다. 이를 해결하기 위해 두 가지 동기화 옵션을 제공합니다.
+
+#### 1) 명시적 커스텀 클래스 (`dropdown-class` 속성)
+특정 타임피커 인스턴스의 드롭다운만 스타일을 다르게 지정하고 싶다면, `dropdown-class` 속성을 사용하세요. (입력한 클래스는 드롭다운 요소에 그대로 주입됩니다.)
+```html
+<time-picker dropdown-class="my-pink-theme"></time-picker>
+```
 ```css
-/* 드롭다운 호버 색상 직접 변경 예시 */
-.ampm-timepicker-dropdown .ampm-item:hover {
-  background-color: #ffcccc !important;
-}
+/* 글로벌 CSS에서 해당 클래스만 핀셋 제어 */
+.my-pink-theme { border: 2px solid pink; }
+.my-pink-theme .ampm-header { background-color: #ffe6e6; }
 ```
+
+#### 2) Vue/Svelte 스코프 CSS 자동 지원 (`data-*` 동기화)
+Vue, Svelte 등의 프레임워크 환경에서 `<style scoped>`를 사용하면, 프레임워크가 고유 해시값(예: `data-v-1a2b3c`)을 요소에 부여합니다. 
+`AmPmTimePicker`는 `<time-picker>` 태그에 부여된 **모든 `data-` 속성을 드롭다운에 자동으로 복사(동기화)** 해줍니다. 따라서 프레임워크 개발자는 아무런 추가 작업 없이도 스코프 CSS를 드롭다운 내부까지 자연스럽게 적용할 수 있습니다!
+
+### 4. ⚠️ Deprecated CSS Variables (폐지 예정 변수)
+아래의 지엽적인 CSS 변수들은 컴포넌트의 최적화 및 웹 표준화를 위해 **다음 메이저 버전(v2.0)에서 완전히 삭제될 예정**입니다. 기존 코드가 당장 깨지지는 않지만(폴백 적용), 가급적 위에서 설명한 `::part()` 선택자를 사용하는 방식으로 마이그레이션해 주시기 바랍니다.
+
+| 폐지 예정 변수 (Deprecated) | 대체 권장 방식 (Migration Guide) |
+| :--- | :--- |
+| `--ampm-bg-color` | `time-picker::part(container) { background-color: ... }` |
+| `--ampm-font-color` | `time-picker { color: ... }` |
+| `--ampm-border-color` | `time-picker::part(container) { border-color: ... }` |
+| `--ampm-toggle-border-left` | `time-picker::part(toggle-btn) { border-left: ... }` |
+| `--ampm-toggle-icon-url` | `time-picker::part(toggle-btn) { background-image: ... }` |
+| `--ampm-toggle-icon-size` | `time-picker::part(toggle-btn) { background-size: ... }` |
+| `--ampm-invalid-color` | `time-picker:invalid::part(container) { border-color: ... }` |
+| `--ampm-disabled-bg` | `time-picker[disabled]::part(container) { background-color: ... }` |
+| `--ampm-disabled-opacity` | `time-picker[disabled] { opacity: ... }` |
+| `--ampm-readonly-bg` | `time-picker[readonly]::part(container) { background-color: ... }` |
+| `--ampm-dropdown-bg`<br>`--ampm-dropdown-text-color`<br>`--ampm-dropdown-border-color` | 전역 클래스로 직접 지정<br>`.ampm-timepicker-dropdown { background-color: ...; color: ...; border-color: ...; }` |
+| `--ampm-bg-hover`<br>`--ampm-dropdown-hover-bg` | `.ampm-timepicker-dropdown .ampm-item:hover { background-color: ... }` |
+| `--ampm-dropdown-header-bg` | `.ampm-timepicker-dropdown .ampm-header { background-color: ... }` |
+| `--ampm-dropdown-divider-color` | `.ampm-timepicker-dropdown .ampm-column { border-right-color: ... }`<br>`.ampm-timepicker-dropdown .ampm-header { border-bottom-color: ... }` |
+| `--ampm-dropdown-scrollbar-thumb` | `.ampm-timepicker-dropdown .ampm-column::-webkit-scrollbar-thumb { background: ... }` |
 
 > **참고**: 다크모드를 원하지 않고 항상 라이트모드(밝은 테마)로 고정하고 싶다면 전역 CSS에 `:root { --ampm-bg-color: #ffffff; --ampm-font-color: #333333; }`를 선언하세요.
 
@@ -202,6 +246,7 @@ picker.addEventListener('change', (e) => {
   - 드롭다운이 열린 상태에서 `←` / `→` 키를 통해 AM/PM, 시간, 분 컬럼 간 포커스를 전환할 수 있습니다.
   - 각 컬럼 내에서 `↑` / `↓` 키로 값을 탐색합니다.
 - **Tab 포커스 이동 제어**: 드롭다운 내에서 `Tab` 키를 누르면 다음 요소로 자연스럽게 이동하며, 브라우저 주소창으로 튕기는 현상(Shadow DOM 포커스 트랩 이슈)을 방지하는 로직이 적용되어 있습니다.
+- **모바일 터치 최적화**: 터치 디바이스에서는 포커스 시 가상 키보드가 올라오지 않도록 자동 차단(`inputmode="none"`)하여 화면이 가려지는 답답함 없이 쾌적하게 스크롤할 수 있습니다.
 - **화면 스크롤 연동**: 드롭다운이 열려 있을 때 브라우저 화면을 스크롤하면 자동으로 닫히며 현재 값이 확정(Commit)됩니다.
 
 ## 📝 변경 이력 (Changelog)

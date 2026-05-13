@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
+
+## [1.2.2] - 2026-05-13
+
+### Added
+- **Scoped Dropdown Styling**: Implemented the `dropdown-class` attribute to safely inject custom classes directly into the dynamically appended dropdown, enabling isolated styling without global layout class interference.
+- **Framework Auto-scoping**: Added automatic synchronization of all `data-*` attributes from the `<time-picker>` element to the dropdown. This provides out-of-the-box, seamless support for scoped CSS in modern frameworks like Vue and Svelte (`<style scoped>`) without requiring any manual configuration.
+
+
+### Changed
+- **Mobile Touch Optimization**: The virtual keyboard is now automatically disabled (`inputmode="none"`) on touch devices to improve user experience, allowing the dropdown UI to be used comfortably without the screen being obscured by the keyboard.
+- **Hide Button Attribute**: Added a new `hide-button` boolean attribute that allows developers to completely hide the right toggle icon, leaving only the input area.
+- **CSS Specificity Optimization**: Lowered the CSS specificity of the internal dropdown styles by wrapping selectors in `:where()`. Migrated static inline styles to the internal `<style>` block and dynamic box-shadows to CSS variables (`--local-box-shadow`). This enables users to easily override styles using standard CSS classes (e.g., `.ampm-timepicker-dropdown .ampm-item`) without needing `!important`.
+- **CSS Architecture Optimization**: Streamlined the component's base CSS variables by deprecating hyper-specific variables (e.g., `--ampm-disabled-bg`, `--ampm-readonly-bg`) and replacing them with intelligent `color-mix()` functions. This automatically calculates harmonious background colors for disabled and readonly states based on the active theme, without requiring manual configuration. (Fallback support for deprecated variables is fully retained).
+
+### Fixed
+- **Mobile Keyboard Scroll**: Fixed an issue where the dropdown would immediately close on mobile devices because focusing the input triggered a browser auto-scroll (e.g., to make room for the virtual keyboard).
+- **Scroll Bleeding**: Fixed an issue where scrolling with the mouse wheel inside the dropdown would cause the outer parent page to scroll when reaching the top or bottom boundaries.
+- **Dropdown Overflow**: Fixed an issue where the dropdown would be cut off on the right side of the screen if the timepicker was positioned too close to the right window edge.
+
+
 ## [1.2.1] - 2026-05-08
 
 ### Fixed

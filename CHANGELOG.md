@@ -1,8 +1,18 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+## [1.2.4] - 2026-05-13
+
+### Fixed
+- **CSS Specificity Overhaul**: Completely refactored internal styling logic for component states (`disabled`, `readonly`, `invalid`, `hide-button`). All hardcoded internal selectors were wrapped with `:where()` to lower their CSS specificity to `0`. This allows developers to effortlessly override any state styling using standard `::part()` selectors without needing `!important`.
+- **Documentation & Demo**: Fixed a visual inconsistency in `index.html` where the "Disabled State Direct Override" demo was displaying the default gray background instead of the described warning yellow due to CSS specificity issues. Restored missing CSS and removed now-unnecessary `!important` tags thanks to the specificity overhaul.
+
+
 ## [1.2.3] - 2026-05-13
 
 ### Fixed
-- **Documentation**: Fixed incorrect CDN version numbers in `README.md` and `README_KR.md`.
-
+- **Documentation**: Fixed incorrect CDN version numbers in `README.md` and `README_KR.md` HTML snippet comments.
 
 
 ## [1.2.2] - 2026-05-13

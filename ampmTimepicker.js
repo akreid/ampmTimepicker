@@ -212,20 +212,20 @@ class AmPmTimePicker extends HTMLElement {
             fill: var(--ampm-dropdown-scrollbar-thumb, #555) !important;
           }
         }
-        :host([disabled]) {
+        :where(:host([disabled])) {
           opacity: var(--ampm-disabled-opacity, var(--disabled-opacity, 0.6));
           cursor: not-allowed;
         }
-        :host([disabled]) .time-picker-container {
+        :where(:host([disabled]) .time-picker-container) {
           background-color: var(--ampm-disabled-bg, var(--disabled-bg, color-mix(in srgb, var(--_local-bg) 80%, var(--_local-color) 20%)));
         }
-        :host([readonly]) .time-picker-container {
+        :where(:host([readonly]) .time-picker-container) {
           background-color: var(--ampm-readonly-bg, var(--readonly-bg, color-mix(in srgb, var(--_local-bg) 90%, var(--_local-color) 10%)));
         }
-        :host(:invalid) .time-picker-container {
+        :where(:host(:invalid) .time-picker-container) {
           border-color: var(--ampm-invalid-color, var(--invalid-color, #dc3545));
         }
-        :host(:invalid) .time-picker-container:focus-within {
+        :where(:host(:invalid) .time-picker-container:focus-within) {
           outline: 2px solid var(--ampm-invalid-color, var(--invalid-color, #dc3545));
           outline-offset: -2px;
         }
@@ -298,10 +298,10 @@ class AmPmTimePicker extends HTMLElement {
         }
         .toggle-btn:not(:disabled):hover { background-color: rgba(0, 0, 0, 0.03); }
         .toggle-btn:not(:disabled):active { background-color: rgba(0, 0, 0, 0.06); }
-        :host([hide-button]) .toggle-btn {
+        :where(:host([hide-button]) .toggle-btn) {
           display: none;
         }
-        :host([hide-button]) .time-input {
+        :where(:host([hide-button]) .time-input) {
           border-top-right-radius: calc(var(--ampm-border-radius) - 1px);
           border-bottom-right-radius: calc(var(--ampm-border-radius) - 1px);
         }

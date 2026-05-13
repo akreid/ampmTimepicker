@@ -280,6 +280,17 @@
             color: #111;
             background-color: #ff5e00;
         }
+
+        /* State override example (::part + attribute) */
+        .state-styled[disabled]::part(container) {
+            background-color: #ffeaa7; /* Warning yellow bg */
+            border-color: #fdcb6e;
+        }
+
+        [data-theme="dark"] .state-styled[disabled]::part(container) {
+            background-color: #4a3c11;
+            border-color: #b38c20;
+        }
     </style>
 </head>
 

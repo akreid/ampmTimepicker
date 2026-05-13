@@ -1,6 +1,6 @@
 {
   "name": "@akreid/ampm-timepicker",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "A custom web component timepicker supporting AM/PM and 24-hour formats.",
   "main": "ampmTimepicker.js",
   "type": "module",

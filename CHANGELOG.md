@@ -1,6 +1,8 @@
-# Changelog
+## [1.2.3] - 2026-05-13
 
-All notable changes to this project will be documented in this file.
+### Fixed
+- **Documentation**: Fixed incorrect CDN version numbers in `README.md` and `README_KR.md`.
+
 
 
 ## [1.2.2] - 2026-05-13

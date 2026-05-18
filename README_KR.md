@@ -10,6 +10,9 @@
 
 `<time-picker>`는 **의존성 없는 순수 자바스크립트(Vanilla JS)**로 구현된 네이티브 커스텀 웹 컴포넌트 타임피커입니다. 리액트나 뷰 같은 **별도의 프레임워크 없이도** 어디서든 독립적으로 작동하며, 12시간/24시간 형식 지원 및 직관적인 키보드 접근성(방향키 및 탭 이동)을 제공합니다.
 
+## 📺 데모 (Demo)
+https://akreid.github.io/ampmTimepicker/
+
 ## 🚀 설치 및 적용
 
 ### 1. ES Module 사용 (권장)
@@ -29,7 +32,7 @@ yarn add @akreid/ampm-timepicker
 <head>
   <title>AmPmTimePicker</title>
   <!-- 최상위 컴포넌트만 임포트 (필요 시: :use-ampm, :interval 등 속성을 사용하여 모드 커스텀 가능) -->
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.2.4/ampmTimepicker.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.2.5/ampmTimepicker.js"></script>
 </head>
 <body>
   <!-- 사용 예시 -->
@@ -43,8 +46,8 @@ yarn add @akreid/ampm-timepicker
 HTML 파일에 `<script>` 태그를 추가하여 바로 사용할 수 있습니다. CDN을 사용할 때는 버전 번호가 포함된 파일 경로를 사용하는 것이 좋습니다.
 
 ```html
-<!-- 스크립트 추가 (버전: 1.2.4) -->
-<script src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.2.4/ampmTimepicker.js"></script>
+<!-- 스크립트 추가 -->
+<script src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.2.5/ampmTimepicker.js"></script>
 
 <!-- 기본 사용 -->
 <time-picker></time-picker>
@@ -70,6 +73,7 @@ HTML 파일에 `<script>` 태그를 추가하여 바로 사용할 수 있습니�
 | `required` | `boolean`| `false` | `true`로 설정 시 폼 전송 전에 반드시 값이 입력되어야 합니다. |
 | `name` | `string` | `null` | 폼 전송 시 데이터 식별에 사용될 요소의 이름 |
 | `value` | `string` | `null` | 초기 설정 시간 값 (형식: `HH:mm`) |
+| `dropdown-class` | `string` | `null` | 동적으로 body에 추가되는 드롭다운 요소에 주입될 커스텀 클래스 이름 (스코프 스타일링용) |
 
 ### HTML 작성 예시
 ```html
@@ -210,7 +214,21 @@ picker.addEventListener('change', (e) => {
 });
 ```
 
-### 3. Form 연동 (Form Integration)
+### 3. 동적 속성 제어 (Dynamic Attributes)
+JavaScript를 사용하여 `start-time`, `end-time`, `disabled`, `readonly` 등의 속성을 동적으로 변경할 수 있습니다. 변경된 속성은 즉시 피커에 반영됩니다.
+
+```javascript
+const startPicker = document.getElementById('start-picker');
+const endPicker = document.getElementById('end-picker');
+
+// 두 개의 피커를 동적으로 연결하는 예시
+startPicker.addEventListener('change', (e) => {
+  if (e.detail.value) endPicker.setAttribute('start-time', e.detail.value);
+  else endPicker.removeAttribute('start-time');
+});
+```
+
+### 4. 폼 연동 (Form Integration)
 `ElementInternals` API를 지원하여, 네이티브 `<input>` 요소처럼 `<form>` 태그 내에서 사용할 수 있습니다.
 
 ```html

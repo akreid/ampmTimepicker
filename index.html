@@ -34,8 +34,6 @@
             color-scheme: dark;
         }
 
-
-
         /* Theme Switch CSS */
         .theme-switch-wrapper {
             position: absolute;
@@ -237,9 +235,9 @@
         }
 
         .neon-styled::part(container) {
-            background-color: #111;
+            background-color: #fff;
             border: 2px solid #ff5e00;
-            box-shadow: 0 4px 10px rgba(255, 94, 0, 0.6);
+            box-shadow: 0 4px 10px rgba(255, 94, 0, 0.3);
         }
 
         .neon-styled::part(input) {
@@ -257,13 +255,13 @@
         /* Dropdown custom class example (Neon theme) */
         .neon-dropdown {
             border: 2px solid #ff5e00;
-            background-color: #111;
-            box-shadow: 0 0 15px rgba(255, 94, 0, 0.4);
+            background-color: #fff;
+            box-shadow: 0 0 15px rgba(255, 94, 0, 0.3);
             color: #ff5e00;
         }
 
         .neon-dropdown .ampm-header {
-            background-color: #222;
+            background-color: #f5f5f5;
             color: #ff5e00;
             border-bottom: 1px solid #ff5e00;
         }
@@ -281,9 +279,21 @@
             background-color: #ff5e00;
         }
 
+        /* Neon theme: dark mode - black bg + stronger glow */
+        [data-theme="dark"] .neon-styled::part(container) {
+            background-color: #000;
+            box-shadow: 0 0 20px rgba(255, 94, 0, 0.8), inset 0 0 10px rgba(255, 94, 0, 0.1);
+        }
+
+        [data-theme="dark"] .neon-dropdown {
+            background-color: #000;
+            box-shadow: 0 0 25px rgba(255, 94, 0, 0.6);
+        }
+
         /* State override example (::part + attribute) */
         .state-styled[disabled]::part(container) {
-            background-color: #ffeaa7; /* Warning yellow bg */
+            background-color: #ffeaa7;
+            /* Warning yellow bg */
             border-color: #fdcb6e;
         }
 
@@ -375,6 +385,30 @@
                     <div class="code-snippet">&lt;time-picker use-ampm="true" end-time="13:59"
                         interval="15"&gt;&lt;/time-picker&gt;</div>
                 </div>
+                <div class="demo-item" style="grid-column: 1 / -1;">
+                    <label>Reactive Range (Dynamic Constraints)</label>
+                    <p>Select a time in either picker to dynamically restrict the other's range.</p>
+                    <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 15px;">
+                        <time-picker id="start-picker" value="09:00" end-time="18:00"></time-picker>
+                        <span style="font-weight: bold;">~</span>
+                        <time-picker id="end-picker" value="18:00" start-time="09:00"></time-picker>
+                    </div>
+                    <div class="code-snippet">
+                        <pre>
+const startPicker = document.getElementById('start-picker');
+const endPicker = document.getElementById('end-picker');
+
+startPicker.addEventListener('change', (e) => {
+  if (e.detail.value) endPicker.setAttribute('start-time', e.detail.value);
+  else endPicker.removeAttribute('start-time');
+});
+
+endPicker.addEventListener('change', (e) => {
+  if (e.detail.value) startPicker.setAttribute('end-time', e.detail.value);
+  else startPicker.removeAttribute('end-time');
+});</pre>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -427,9 +461,9 @@
     --ampm-border-radius: 20px;
 }
 .neon-styled::part(container) {
-  background-color: #111;
+  background-color: #fff;        /* light mode: white bg */
   border: 2px solid #ff5e00;
-  box-shadow: 0 4px 10px rgba(255, 94, 0, 0.6);
+  box-shadow: 0 4px 10px rgba(255, 94, 0, 0.3);
 }
 .neon-styled::part(input) { color: #ff5e00; }
 .neon-styled::part(toggle-btn) {
@@ -438,16 +472,27 @@
 
 /* Dropdown styling */
 .neon-dropdown {
-  background-color: #111;
+  background-color: #fff;        /* light mode: white bg */
   border: 2px solid #ff5e00;
   color: #ff5e00;
 }
 .neon-dropdown .ampm-header {
-  background-color: #222;
+  background-color: #f5f5f5;     /* light mode: light header */
   border-bottom: 1px solid #ff5e00;
 }
 .neon-dropdown .ampm-item.ampm-active {
   background-color: #ff5e00; color: #111;
+}
+
+/* Dark mode: black bg + stronger glow */
+[data-theme="dark"] .neon-styled::part(container) {
+  background-color: #000;
+  box-shadow: 0 0 20px rgba(255,94,0,0.8),
+              inset 0 0 10px rgba(255,94,0,0.1);
+}
+[data-theme="dark"] .neon-dropdown {
+  background-color: #000;
+  box-shadow: 0 0 25px rgba(255,94,0,0.6);
 }</pre>
                 </div>
                 <div class="demo-item">
@@ -516,6 +561,19 @@
                 console.log('Value changed:', e.detail.value);
             });
         });
+        // Reactive range demo
+        const startPicker = document.getElementById('start-picker');
+        const endPicker = document.getElementById('end-picker');
+        if (startPicker && endPicker) {
+            startPicker.addEventListener('change', (e) => {
+                if (e.detail.value) endPicker.setAttribute('start-time', e.detail.value);
+                else endPicker.removeAttribute('start-time');
+            });
+            endPicker.addEventListener('change', (e) => {
+                if (e.detail.value) startPicker.setAttribute('end-time', e.detail.value);
+                else startPicker.removeAttribute('end-time');
+            });
+        }
     </script>
 
 </body>

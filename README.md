@@ -15,8 +15,6 @@
 ## Demo
 https://akreid.github.io/ampmTimepicker/
 
-![AmPmTimePicker Demo](./capture.gif)
-
 ### 1. Using ES Module (Recommended)
 
 If your project supports ES modules, it's best to install it via npm and import it.
@@ -34,7 +32,7 @@ yarn add @akreid/ampm-timepicker
 <head>
   <title>AmPmTimePicker Demo</title>
   <!-- Import the component as a module -->
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.2.4/ampmTimepicker.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.2.5/ampmTimepicker.js"></script>
 </head>
 <body>
   <!-- Usage example -->
@@ -48,8 +46,8 @@ yarn add @akreid/ampm-timepicker
 You can use it immediately by adding a `<script>` tag to your HTML file. It is recommended to use a file path that includes the version number.
 
 ```html
-<!-- Include script (Version: 1.2.4) -->
-<script src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.2.4/ampmTimepicker.js"></script>
+<!-- Include script (Version: 1.2.5) -->
+<script src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.2.5/ampmTimepicker.js"></script>
 
 <!-- Basic usage -->
 <time-picker></time-picker>
@@ -75,6 +73,7 @@ You can control the picker's behavior and display format by adding attributes to
 | `required` | `boolean`| `false` | When set to `true`, the field must be filled before submitting a form |
 | `name` | `string` | `null` | The name of the element used for form submission |
 | `value` | `string` | `null` | The initial time value (Format: `HH:mm`) |
+| `dropdown-class` | `string` | `null` | A custom class name injected directly into the dynamically appended dropdown element for scoped styling |
 
 ### HTML Example
 ```html
@@ -215,7 +214,21 @@ picker.addEventListener('change', (e) => {
 });
 ```
 
-### 3. Form Integration
+### 3. Dynamic Attributes
+You can dynamically modify attributes like `start-time`, `end-time`, `disabled`, `readonly`, etc., using standard DOM APIs. The component will react immediately.
+
+```javascript
+const startPicker = document.getElementById('start-picker');
+const endPicker = document.getElementById('end-picker');
+
+// Create a paired constraint dynamically
+startPicker.addEventListener('change', (e) => {
+  if (e.detail.value) endPicker.setAttribute('start-time', e.detail.value);
+  else endPicker.removeAttribute('start-time');
+});
+```
+
+### 4. Form Integration
 Since it supports `ElementInternals`, you can use it directly inside a `<form>` tag like a native input.
 
 ```html

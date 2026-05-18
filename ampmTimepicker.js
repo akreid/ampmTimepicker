@@ -1,8 +1,155 @@
 class AmPmTimePicker extends HTMLElement {
   static formAssociated = true;
 
+  // --- AdoptedStyleSheets: 클래스 레벨에서 딱 한 번만 CSS 객체 생성 ---
+  static _hostSheet = null;
+  static _dropdownSheet = null;
+
+  static _getHostSheet() {
+    if (AmPmTimePicker._hostSheet) return AmPmTimePicker._hostSheet;
+    AmPmTimePicker._hostSheet = new CSSStyleSheet();
+    AmPmTimePicker._hostSheet.replaceSync(`
+      :host {
+        display: inline-block;
+        box-sizing: border-box;
+        vertical-align: middle;
+        --ampm-width: var(--width, 165px);
+        --ampm-height: var(--height, 42px);
+        --ampm-border-radius: var(--border-radius, 8px);
+        --ampm-primary-color: var(--primary-color, #007bff);
+        --_local-bg: var(--ampm-bg-color, var(--bg-color, Field));
+        --_local-color: var(--ampm-font-color, var(--font-color, FieldText));
+        --_local-border: var(--ampm-border-color, var(--border-color, ButtonBorder));
+        width: var(--ampm-width);
+        color: var(--_local-color);
+      }
+      @media (prefers-color-scheme: dark) {
+        :host { --ampm-primary-color: var(--primary-color, #4da3ff); }
+        #color-resolver {
+          caret-color: var(--ampm-dropdown-hover-bg, var(--ampm-bg-hover, var(--bg-hover, rgba(255, 255, 255, 0.1)))) !important;
+          column-rule-color: var(--ampm-dropdown-header-bg, rgba(255, 255, 255, 0.05)) !important;
+          fill: var(--ampm-dropdown-scrollbar-thumb, #555) !important;
+        }
+      }
+      :where(:host([disabled])) {
+        opacity: var(--ampm-disabled-opacity, var(--disabled-opacity, 0.6));
+        cursor: not-allowed;
+      }
+      :where(:host([disabled]) .time-picker-container) {
+        background-color: var(--ampm-disabled-bg, var(--disabled-bg, color-mix(in srgb, var(--_local-bg) 80%, var(--_local-color) 20%)));
+      }
+      :where(:host([readonly]) .time-picker-container) {
+        background-color: var(--ampm-readonly-bg, var(--readonly-bg, color-mix(in srgb, var(--_local-bg) 90%, var(--_local-color) 10%)));
+      }
+      :where(:host(:invalid) .time-picker-container) {
+        border-color: var(--ampm-invalid-color, var(--invalid-color, #dc3545));
+      }
+      :where(:host(:invalid) .time-picker-container:focus-within) {
+        outline: 2px solid var(--ampm-invalid-color, var(--invalid-color, #dc3545));
+        outline-offset: -2px;
+      }
+      .time-picker-container {
+        position: relative;
+        display: flex;
+        width: 100%;
+        height: var(--ampm-height);
+        align-items: center;
+        border: 1px solid var(--_local-border);
+        border-radius: var(--ampm-border-radius);
+        background: var(--_local-bg);
+        font-family: inherit;
+        box-sizing: border-box;
+        overflow: hidden;
+      }
+      .time-input {
+        border: none;
+        outline: none;
+        padding: 0 12px;
+        flex: 1;
+        width: 0;
+        height: 100%;
+        font-family: inherit;
+        font-size: inherit;
+        background: transparent;
+        color: inherit;
+        box-sizing: border-box;
+        line-height: var(--ampm-height);
+        border-top-left-radius: calc(var(--ampm-border-radius) - 1px);
+        border-bottom-left-radius: calc(var(--ampm-border-radius) - 1px);
+      }
+      .time-input:focus-visible { box-shadow: none; z-index: 1; }
+      .time-picker-container:focus-within {
+        border-color: var(--ampm-primary-color);
+        outline: 2px solid var(--ampm-primary-color);
+        outline-offset: -2px;
+      }
+      .time-input::placeholder { color: var(--ampm-font-color); opacity: 0.4; font-size: 0.9em; }
+      .toggle-btn {
+        background-color: transparent;
+        background-image: var(--ampm-toggle-icon-url, var(--toggle-icon-url, none));
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: var(--ampm-toggle-icon-size, var(--toggle-icon-size, 16px));
+        border: none;
+        border-left: var(--ampm-toggle-border-left, var(--toggle-border-left, 1px solid var(--_local-border)));
+        border-left-color: inherit;
+        width: 32px;
+        padding: 0;
+        cursor: pointer;
+        height: 100%;
+        color: inherit;
+        opacity: 0.7;
+        font-size: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        border-top-right-radius: calc(var(--ampm-border-radius) - 1px);
+        border-bottom-right-radius: calc(var(--ampm-border-radius) - 1px);
+        transition: background-color 0.2s;
+      }
+      .toggle-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+      .toggle-btn:not(:disabled):hover { background-color: rgba(0, 0, 0, 0.03); }
+      .toggle-btn:not(:disabled):active { background-color: rgba(0, 0, 0, 0.06); }
+      :where(:host([hide-button]) .toggle-btn) { display: none; }
+      :where(:host([hide-button]) .time-input) {
+        border-top-right-radius: calc(var(--ampm-border-radius) - 1px);
+        border-bottom-right-radius: calc(var(--ampm-border-radius) - 1px);
+      }
+    `);
+    return AmPmTimePicker._hostSheet;
+  }
+
+  static _getDropdownSheet() {
+    if (AmPmTimePicker._dropdownSheet) return AmPmTimePicker._dropdownSheet;
+    AmPmTimePicker._dropdownSheet = new CSSStyleSheet();
+    AmPmTimePicker._dropdownSheet.replaceSync(`
+      :where(.ampm-timepicker-dropdown) {
+        background-color: var(--local-dropdown-bg);
+        box-shadow: var(--local-box-shadow, 0px 8px 24px rgba(0, 0, 0, 0.15));
+        border: 1px solid var(--local-border-color);
+        border-radius: var(--local-border-radius);
+        font-family: inherit;
+        color: var(--local-text-color);
+      }
+      :where(.ampm-timepicker-dropdown) .ampm-column::-webkit-scrollbar { width: 4px; }
+      :where(.ampm-timepicker-dropdown) .ampm-column::-webkit-scrollbar-thumb { background: var(--local-scrollbar-thumb); border-radius: 4px; }
+      :where(.ampm-timepicker-dropdown) .ampm-column:focus-visible { box-shadow: inset 0 0 0 2px var(--local-primary-color); border-radius: 4px; }
+      :where(.ampm-timepicker-dropdown) .ampm-col-wrapper { flex:1; display:flex; flex-direction:column; }
+      :where(.ampm-timepicker-dropdown) .ampm-column { border-right: 1px solid var(--local-divider-color); }
+      :where(.ampm-timepicker-dropdown) .ampm-col-wrapper:last-child .ampm-column { border-right: none; }
+      :where(.ampm-timepicker-dropdown) .ampm-header { padding:6px; font-size:0.7em; text-align:center; background:var(--local-header-bg); color:inherit; opacity:0.5; border-bottom:1px solid var(--local-divider-color); }
+      :where(.ampm-timepicker-dropdown) .ampm-item { padding: 10px 5px; text-align: center; cursor: pointer; font-size: 1em; transition: 0.2s; user-select: none; color: inherit; }
+      :where(.ampm-timepicker-dropdown) .ampm-item:hover:where(:not(.ampm-disabled)) { background-color: var(--local-hover-bg); }
+      :where(.ampm-timepicker-dropdown) .ampm-item.ampm-active:where(:not(.ampm-disabled)) { background-color: var(--local-hover-bg); color: var(--local-primary-color); font-weight: bold; }
+      :where(.ampm-timepicker-dropdown) .ampm-item.ampm-disabled { color: var(--local-scrollbar-thumb); cursor: not-allowed; opacity: 0.5; }
+      :where(.ampm-timepicker-dropdown).ampm-hidden { display: none !important; }
+    `);
+    return AmPmTimePicker._dropdownSheet;
+  }
+
   static get observedAttributes() {
-    return ['disabled', 'readonly', 'required', 'value'];
+    return ['disabled', 'readonly', 'required', 'value', 'start-time', 'end-time'];
   }
 
   constructor() {
@@ -97,6 +244,16 @@ class AmPmTimePicker extends HTMLElement {
       this.value = newValue;
     } else if (name === 'required') {
       this.updateValidity();
+    } else if (name === 'start-time') {
+      this.startMin = this.timeToMinutes(newValue) ?? 0;
+      if (this.dropdown && !this.dropdown.classList.contains('ampm-hidden')) {
+        this.syncScrollAndHighlight();
+      }
+    } else if (name === 'end-time') {
+      this.endMin = this.timeToMinutes(newValue) ?? 1439;
+      if (this.dropdown && !this.dropdown.classList.contains('ampm-hidden')) {
+        this.syncScrollAndHighlight();
+      }
     }
   }
 
@@ -182,135 +339,18 @@ class AmPmTimePicker extends HTMLElement {
   }
 
   render(margin) {
+    // AdoptedStyleSheets: 공유 스타일시트 적용 (인스턴스별 <style> 태그 중복 제거)
+    this.shadowRoot.adoptedStyleSheets = [AmPmTimePicker._getHostSheet()];
+
+    // 동적 값(margin-right)은 인스턴스별로 직접 스타일 적용
+    if (margin) this.style.marginRight = margin;
+
     this.shadowRoot.innerHTML = `
-      <style>
-        :host { 
-          display: inline-block; 
-          margin-right: ${margin}; 
-          box-sizing: border-box; 
-          vertical-align: middle;
-          --ampm-width: var(--width, 165px); 
-          --ampm-height: var(--height, 42px);
-          --ampm-border-radius: var(--border-radius, 8px);
-          --ampm-primary-color: var(--primary-color, #007bff); 
-          
-          /* Internal fallbacks for deprecated global variables */
-          --_local-bg: var(--ampm-bg-color, var(--bg-color, Field));
-          --_local-color: var(--ampm-font-color, var(--font-color, FieldText));
-          --_local-border: var(--ampm-border-color, var(--border-color, ButtonBorder));
-          
-          width: var(--ampm-width);
-          color: var(--_local-color);
-        }
-        @media (prefers-color-scheme: dark) {
-          :host {
-            --ampm-primary-color: var(--primary-color, #4da3ff);
-          }
-          #color-resolver {
-            caret-color: var(--ampm-dropdown-hover-bg, var(--ampm-bg-hover, var(--bg-hover, rgba(255, 255, 255, 0.1)))) !important;
-            column-rule-color: var(--ampm-dropdown-header-bg, rgba(255, 255, 255, 0.05)) !important;
-            fill: var(--ampm-dropdown-scrollbar-thumb, #555) !important;
-          }
-        }
-        :where(:host([disabled])) {
-          opacity: var(--ampm-disabled-opacity, var(--disabled-opacity, 0.6));
-          cursor: not-allowed;
-        }
-        :where(:host([disabled]) .time-picker-container) {
-          background-color: var(--ampm-disabled-bg, var(--disabled-bg, color-mix(in srgb, var(--_local-bg) 80%, var(--_local-color) 20%)));
-        }
-        :where(:host([readonly]) .time-picker-container) {
-          background-color: var(--ampm-readonly-bg, var(--readonly-bg, color-mix(in srgb, var(--_local-bg) 90%, var(--_local-color) 10%)));
-        }
-        :where(:host(:invalid) .time-picker-container) {
-          border-color: var(--ampm-invalid-color, var(--invalid-color, #dc3545));
-        }
-        :where(:host(:invalid) .time-picker-container:focus-within) {
-          outline: 2px solid var(--ampm-invalid-color, var(--invalid-color, #dc3545));
-          outline-offset: -2px;
-        }
-        .time-picker-container { 
-          position: relative; 
-          display: flex; 
-          width: 100%; 
-          height: var(--ampm-height);
-          align-items: center; 
-          border: 1px solid var(--_local-border); 
-          border-radius: var(--ampm-border-radius); 
-          background: var(--_local-bg); 
-          font-family: inherit; 
-          box-sizing: border-box; 
-          overflow: hidden;
-        }
-        .time-input { 
-          border: none; 
-          outline: none; 
-          padding: 0 12px; 
-          flex: 1; 
-          width: 0;
-          height: 100%;
-          font-family: inherit;
-          font-size: inherit; 
-          background: transparent;
-          color: inherit;
-          box-sizing: border-box; 
-          line-height: var(--ampm-height);
-          border-top-left-radius: calc(var(--ampm-border-radius) - 1px);
-          border-bottom-left-radius: calc(var(--ampm-border-radius) - 1px);
-        }
-        .time-input:focus-visible { 
-          box-shadow: none;
-          z-index: 1; 
-        }
-        .time-picker-container:focus-within {
-          border-color: var(--ampm-primary-color);
-          outline: 2px solid var(--ampm-primary-color);
-          outline-offset: -2px;
-        }
-        .time-input::placeholder { color: var(--ampm-font-color); opacity: 0.4; font-size: 0.9em; }
-        .toggle-btn { 
-          background-color: transparent; 
-          background-image: var(--ampm-toggle-icon-url, var(--toggle-icon-url, none));
-          background-repeat: no-repeat;
-          background-position: center;
-          background-size: var(--ampm-toggle-icon-size, var(--toggle-icon-size, 16px));
-          border: none; 
-          border-left: var(--ampm-toggle-border-left, var(--toggle-border-left, 1px solid var(--_local-border))); 
-          border-left-color: inherit;
-          width: 32px;
-          padding: 0;
-          cursor: pointer; 
-          height: 100%; 
-          color: inherit;
-          opacity: 0.7;
-          font-size: 10px; 
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-shrink: 0;
-          border-top-right-radius: calc(var(--ampm-border-radius) - 1px);
-          border-bottom-right-radius: calc(var(--ampm-border-radius) - 1px);
-          transition: background-color 0.2s;
-        }
-        .toggle-btn:disabled {
-          opacity: 0.3;
-          cursor: not-allowed;
-        }
-        .toggle-btn:not(:disabled):hover { background-color: rgba(0, 0, 0, 0.03); }
-        .toggle-btn:not(:disabled):active { background-color: rgba(0, 0, 0, 0.06); }
-        :where(:host([hide-button]) .toggle-btn) {
-          display: none;
-        }
-        :where(:host([hide-button]) .time-input) {
-          border-top-right-radius: calc(var(--ampm-border-radius) - 1px);
-          border-bottom-right-radius: calc(var(--ampm-border-radius) - 1px);
-        }
-      </style>
       <div class="time-picker-container" part="container">
         <input type="text" id="time-input" class="time-input" part="input" placeholder="${this.useAmPm ? "AM hh:mm" : "HH:mm"}" maxlength="${this.useAmPm ? '8' : '5'}" inputmode="text" autocomplete="off" spellcheck="false">
         <button id="toggle-btn" class="toggle-btn" type="button" part="toggle-btn">▼</button>
       </div>
-      <div id="color-resolver" style="visibility: hidden; position: absolute; width: 0; height: 0; border-top-style: solid; outline-style: solid; text-decoration-line: underline; column-rule-style: solid; color: var(--ampm-dropdown-text-color, var(--_local-color)); background-color: var(--ampm-dropdown-bg, var(--_local-bg)); border-top-color: var(--ampm-dropdown-border-color, var(--_local-border)); outline-color: var(--ampm-primary-color); caret-color: var(--ampm-dropdown-hover-bg, var(--ampm-bg-hover, var(--bg-hover, #f1f7ff))); column-rule-color: var(--ampm-dropdown-header-bg, rgba(0,0,0,0.04)); text-decoration-color: var(--ampm-dropdown-divider-color, color-mix(in srgb, var(--_local-border) 50%, transparent)); fill: var(--ampm-dropdown-scrollbar-thumb, #ccc);"></div>
+      <div id="color-resolver" aria-hidden="true" style="visibility: hidden; position: absolute; width: 0; height: 0; border-top-style: solid; outline-style: solid; text-decoration-line: underline; column-rule-style: solid; color: var(--ampm-dropdown-text-color, var(--_local-color)); background-color: var(--ampm-dropdown-bg, var(--_local-bg)); border-top-color: var(--ampm-dropdown-border-color, var(--_local-border)); outline-color: var(--ampm-primary-color); caret-color: var(--ampm-dropdown-hover-bg, var(--ampm-bg-hover, var(--bg-hover, #f1f7ff))); column-rule-color: var(--ampm-dropdown-header-bg, rgba(0,0,0,0.04)); text-decoration-color: var(--ampm-dropdown-divider-color, color-mix(in srgb, var(--_local-border) 50%, transparent)); fill: var(--ampm-dropdown-scrollbar-thumb, #ccc);"></div>
     `;
   }
 
@@ -350,29 +390,13 @@ class AmPmTimePicker extends HTMLElement {
     const hourHeaderHTML = this.labelHour ? `<div class="ampm-header">${this.labelHour}</div>` : '';
     const minHeaderHTML = this.labelMin ? `<div class="ampm-header">${this.labelMin}</div>` : '';
 
+    // AdoptedStyleSheets: 드롭다운 공유 스타일시트 적용
+    const sheet = AmPmTimePicker._getDropdownSheet();
+    if (!document.adoptedStyleSheets.includes(sheet)) {
+      document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet];
+    }
+
     this.dropdown.innerHTML = `
-      <style>
-        :where(.ampm-timepicker-dropdown) {
-          background-color: var(--local-dropdown-bg);
-          box-shadow: var(--local-box-shadow, 0px 8px 24px rgba(0, 0, 0, 0.15));
-          border: 1px solid var(--local-border-color);
-          border-radius: var(--local-border-radius);
-          font-family: inherit;
-          color: var(--local-text-color);
-        }
-        :where(.ampm-timepicker-dropdown) .ampm-column::-webkit-scrollbar { width: 4px; }
-        :where(.ampm-timepicker-dropdown) .ampm-column::-webkit-scrollbar-thumb { background: var(--local-scrollbar-thumb); border-radius: 4px; }
-        :where(.ampm-timepicker-dropdown) .ampm-column:focus-visible { box-shadow: inset 0 0 0 2px var(--local-primary-color); border-radius: 4px; }
-        :where(.ampm-timepicker-dropdown) .ampm-col-wrapper { flex:1; display:flex; flex-direction:column; }
-        :where(.ampm-timepicker-dropdown) .ampm-column { border-right: 1px solid var(--local-divider-color); }
-        :where(.ampm-timepicker-dropdown) .ampm-col-wrapper:last-child .ampm-column { border-right: none; }
-        :where(.ampm-timepicker-dropdown) .ampm-header { padding:6px; font-size:0.7em; text-align:center; background:var(--local-header-bg); color:inherit; opacity:0.5; border-bottom:1px solid var(--local-divider-color); }
-        :where(.ampm-timepicker-dropdown) .ampm-item { padding: 10px 5px; text-align: center; cursor: pointer; font-size: 1em; transition: 0.2s; user-select: none; color: inherit; }
-        :where(.ampm-timepicker-dropdown) .ampm-item:hover:where(:not(.ampm-disabled)) { background-color: var(--local-hover-bg); }
-        :where(.ampm-timepicker-dropdown) .ampm-item.ampm-active:where(:not(.ampm-disabled)) { background-color: var(--local-hover-bg); color: var(--local-primary-color); font-weight: bold; }
-        :where(.ampm-timepicker-dropdown) .ampm-item.ampm-disabled { color: var(--local-scrollbar-thumb); cursor: not-allowed; opacity: 0.5; }
-        :where(.ampm-timepicker-dropdown).ampm-hidden { display: none !important; }
-      </style>
       ${ampmHTML}
       <div class="ampm-col-wrapper">
         ${hourHeaderHTML}

@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.5] - 2026-05-18
+
+### Added
+- **Reactive Attributes**: Added dynamic reactivity for `start-time` and `end-time` attributes. Modifying these attributes via JavaScript now immediately recalculates time boundaries and updates the dropdown state if it is currently open. Ideal for "Start Time to End Time" paired pickers.
+
+### Changed
+- **Performance Optimization (AdoptedStyleSheets)**: Migrated internal style injection from per-instance `<style>` tags to `CSSStyleSheet` objects shared at the class level via `adoptedStyleSheets`. All instances of `<time-picker>` now share a single host stylesheet and a single dropdown stylesheet, eliminating redundant CSS parsing and significantly reducing memory usage when multiple pickers are present on a page.
+- **Accessibility**: Added `aria-hidden="true"` to the internal `#color-resolver` div to prevent screen readers from encountering the invisible helper element.
+
+
 ## [1.2.4] - 2026-05-13
 
 ### Fixed

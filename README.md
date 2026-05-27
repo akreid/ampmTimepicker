@@ -6,6 +6,14 @@
 
 [![npm version](https://img.shields.io/npm/v/@akreid/ampm-timepicker.svg?style=flat-square)](https://www.npmjs.com/package/@akreid/ampm-timepicker)
 [![npm downloads](https://img.shields.io/npm/dm/@akreid/ampm-timepicker.svg?style=flat-square)](https://www.npmjs.com/package/@akreid/ampm-timepicker)
+[![npm total downloads](https://img.shields.io/npm/dt/@akreid/ampm-timepicker.svg?style=flat-square)](https://www.npmjs.com/package/@akreid/ampm-timepicker)
+[![npm bundle size](https://img.shields.io/bundlephobia/minzip/@akreid/ampm-timepicker?style=flat-square)](https://bundlephobia.com/package/@akreid/ampm-timepicker)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
+
+
+![js](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=JavaScript&logoColor=white)
+
+
 
 > ⚠️ **v1.2.0 Update Notice (Styling Changes)**<br>
 > Starting from this update, the component now inherits fonts and colors from its parent element and supports automatic dark mode. As a result, its appearance might look slightly different when updating from older versions. However, it will now blend much more naturally with your default website styles without requiring manual CSS tweaks.
@@ -32,7 +40,7 @@ yarn add @akreid/ampm-timepicker
 <head>
   <title>AmPmTimePicker Demo</title>
   <!-- Import the component as a module -->
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.2.5/ampmTimepicker.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.2.6/ampmTimepicker.js"></script>
 </head>
 <body>
   <!-- Usage example -->
@@ -46,8 +54,8 @@ yarn add @akreid/ampm-timepicker
 You can use it immediately by adding a `<script>` tag to your HTML file. It is recommended to use a file path that includes the version number.
 
 ```html
-<!-- Include script (Version: 1.2.5) -->
-<script src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.2.5/ampmTimepicker.js"></script>
+<!-- Include script (Version: 1.2.6) -->
+<script src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.2.6/ampmTimepicker.js"></script>
 
 <!-- Basic usage -->
 <time-picker></time-picker>
@@ -71,6 +79,7 @@ You can control the picker's behavior and display format by adding attributes to
 | `disabled` | `boolean`| `false` | When set to `true`, the component is disabled and interaction is blocked |
 | `readonly` | `boolean`| `false` | When set to `true`, the value cannot be changed by the user |
 | `required` | `boolean`| `false` | When set to `true`, the field must be filled before submitting a form |
+| `required-message` | `string` | `null` | Custom validation error message when the `required` condition is not met. If not provided, the browser's default localized message is used. |
 | `name` | `string` | `null` | The name of the element used for form submission |
 | `value` | `string` | `null` | The initial time value (Format: `HH:mm`) |
 | `dropdown-class` | `string` | `null` | A custom class name injected directly into the dynamically appended dropdown element for scoped styling |
@@ -87,6 +96,37 @@ You can control the picker's behavior and display format by adding attributes to
   ampm-label="AM/PM"
   margin-right="8px">
 </time-picker>
+```
+
+### Global / Batch Configuration (JS)
+If you have multiple timepickers on a single page, you can apply common attributes globally using JavaScript instead of repeating them in your HTML.
+
+```html
+<!-- Add a common class to your timepickers -->
+<time-picker class="common-time"></time-picker>
+<!-- Override specific attributes directly in HTML if needed -->
+<time-picker class="common-time" interval="30"></time-picker>
+
+<script type="module">
+  document.addEventListener('DOMContentLoaded', () => {
+    const defaultOptions = {
+      'use-ampm': 'true',
+      'interval': '15',
+      'hour-label': 'Hour',
+      'min-label': 'Min',
+      'ampm-label': 'AM/PM'
+    };
+
+    document.querySelectorAll('.common-time').forEach(picker => {
+      Object.entries(defaultOptions).forEach(([key, value]) => {
+        // Apply default value only if not explicitly set in HTML
+        if (!picker.hasAttribute(key)) {
+          picker.setAttribute(key, value);
+        }
+      });
+    });
+  });
+</script>
 ```
 
 ## 🎨 Styling & Theming

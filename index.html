@@ -413,7 +413,48 @@ endPicker.addEventListener('change', (e) => {
         </section>
 
         <section>
-            <h2>4. Custom Styling</h2>
+            <h2>4. Batch Configuration (JS)</h2>
+            <p>Apply common attributes globally using JavaScript. Notice how the last picker overrides the
+                <code>interval</code>.
+            </p>
+            <div class="demo-grid">
+                <div class="demo-item" style="grid-column: 1 / -1;">
+                    <label>Common Class Configuration</label>
+                    <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 15px;">
+                        <time-picker class="common-time-demo"></time-picker>
+                        <time-picker class="common-time-demo"></time-picker>
+                    </div>
+                    <label>Overrides interval to 30 and use-ampm to false</label>
+                    <time-picker class="common-time-demo" use-ampm="false" interval="30"></time-picker>
+                    <div class="code-snippet">
+                        <pre>
+&lt;!-- HTML --&gt;
+&lt;time-picker class="common-time-demo"&gt;&lt;/time-picker&gt;
+&lt;time-picker class="common-time-demo"&gt;&lt;/time-picker&gt;
+&lt;time-picker class="common-time-demo" interval="30"&gt;&lt;/time-picker&gt;
+
+&lt;!-- JavaScript --&gt;
+const defaultOptions = {
+  'use-ampm': 'true',
+  'interval': '15',
+  'hour-label': 'Hour',
+  'min-label': 'Min',
+  'ampm-label': 'AM/PM'
+};
+document.querySelectorAll('.common-time-demo').forEach(picker =&gt; {
+  Object.entries(defaultOptions).forEach(([key, value]) =&gt; {
+    if (!picker.hasAttribute(key)) {
+      picker.setAttribute(key, value);
+    }
+  });
+});</pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>5. Custom Styling</h2>
             <p>Customize the appearance using CSS Custom Properties.</p>
             <div class="demo-grid">
                 <div class="demo-item">
@@ -444,7 +485,7 @@ endPicker.addEventListener('change', (e) => {
         </section>
 
         <section>
-            <h2>5. Advanced Styling (::part & States)</h2>
+            <h2>6. Advanced Styling (::part & States)</h2>
             <p>Customize internal elements directly using the <code>::part()</code> selector and attribute selectors.
             </p>
             <div class="demo-grid">
@@ -508,13 +549,14 @@ endPicker.addEventListener('change', (e) => {
         </section>
 
         <section>
-            <h2>6. Form Integration</h2>
+            <h2>7. Form Integration</h2>
             <p>This component supports <code>ElementInternals</code>, allowing it to work seamlessly with native HTML
                 forms.</p>
             <form id="demoForm" class="form-example">
                 <div class="demo-item">
                     <label for="booking-time">Booking Time (Required):</label>
                     <time-picker name="booking-time" required use-ampm="true"></time-picker>
+                    <time-picker required required-message="필수값입니다"></time-picker>
                     <div class="code-snippet">&lt;time-picker name="booking-time" required
                         use-ampm="true"&gt;&lt;/time-picker&gt;</div>
                 </div>
@@ -574,6 +616,22 @@ endPicker.addEventListener('change', (e) => {
                 else startPicker.removeAttribute('end-time');
             });
         }
+
+        // Batch Configuration demo
+        const defaultOptions = {
+            'use-ampm': 'true',
+            'interval': '15',
+            'hour-label': 'Hour',
+            'min-label': 'Min',
+            'ampm-label': 'AM/PM'
+        };
+        document.querySelectorAll('.common-time-demo').forEach(picker => {
+            Object.entries(defaultOptions).forEach(([key, value]) => {
+                if (!picker.hasAttribute(key)) {
+                    picker.setAttribute(key, value);
+                }
+            });
+        });
     </script>
 
 </body>

@@ -4,6 +4,14 @@
 
 [![npm version](https://img.shields.io/npm/v/@akreid/ampm-timepicker.svg?style=flat-square)](https://www.npmjs.com/package/@akreid/ampm-timepicker)
 [![npm downloads](https://img.shields.io/npm/dm/@akreid/ampm-timepicker.svg?style=flat-square)](https://www.npmjs.com/package/@akreid/ampm-timepicker)
+[![npm total downloads](https://img.shields.io/npm/dt/@akreid/ampm-timepicker.svg?style=flat-square)](https://www.npmjs.com/package/@akreid/ampm-timepicker)
+[![npm bundle size](https://img.shields.io/bundlephobia/minzip/@akreid/ampm-timepicker?style=flat-square)](https://bundlephobia.com/package/@akreid/ampm-timepicker)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
+
+
+![js](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=JavaScript&logoColor=white)
+
+
 
 > ⚠️ **v1.2.0 스타일 업데이트 주의사항 (Styling Changes)**<br>
 > 이번 업데이트부터 컴포넌트가 부모 요소의 폰트 및 색상 스타일을 상속(`inherit`)받고 자동 다크모드를 지원하도록 변경되었습니다. 이로 인해 기존 버전에서 업데이트 시 디자인이 약간 달라 보일 수 있습니다. 대신 별도의 커스텀 없이도 사용자의 웹페이지(기본 스타일)에 훨씬 더 자연스럽게 녹아들게 되었습니다.
@@ -32,7 +40,7 @@ yarn add @akreid/ampm-timepicker
 <head>
   <title>AmPmTimePicker</title>
   <!-- 최상위 컴포넌트만 임포트 (필요 시: :use-ampm, :interval 등 속성을 사용하여 모드 커스텀 가능) -->
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.2.5/ampmTimepicker.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.2.6/ampmTimepicker.js"></script>
 </head>
 <body>
   <!-- 사용 예시 -->
@@ -47,7 +55,7 @@ HTML 파일에 `<script>` 태그를 추가하여 바로 사용할 수 있습니�
 
 ```html
 <!-- 스크립트 추가 -->
-<script src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.2.5/ampmTimepicker.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.2.6/ampmTimepicker.js"></script>
 
 <!-- 기본 사용 -->
 <time-picker></time-picker>
@@ -71,6 +79,7 @@ HTML 파일에 `<script>` 태그를 추가하여 바로 사용할 수 있습니�
 | `disabled` | `boolean`| `false` | `true`로 설정 시 컴포넌트가 비활성화되고 조작할 수 없습니다. |
 | `readonly` | `boolean`| `false` | `true`로 설정 시 값을 변경할 수 없는 읽기 전용 상태가 됩니다. |
 | `required` | `boolean`| `false` | `true`로 설정 시 폼 전송 전에 반드시 값이 입력되어야 합니다. |
+| `required-message` | `string` | `null` | 값이 비어있을 때 표시될 커스텀 에러 메시지. 미설정 시 브라우저 기본 다국어 메시지가 출력됩니다. |
 | `name` | `string` | `null` | 폼 전송 시 데이터 식별에 사용될 요소의 이름 |
 | `value` | `string` | `null` | 초기 설정 시간 값 (형식: `HH:mm`) |
 | `dropdown-class` | `string` | `null` | 동적으로 body에 추가되는 드롭다운 요소에 주입될 커스텀 클래스 이름 (스코프 스타일링용) |
@@ -87,6 +96,37 @@ HTML 파일에 `<script>` 태그를 추가하여 바로 사용할 수 있습니�
   ampm-label="오전/오후"
   margin-right="8px">
 </time-picker>
+```
+
+### 다수 컴포넌트 일괄 설정 (JS)
+화면에 `time-picker`가 여러 개일 경우, HTML에 매번 속성을 적는 대신 JavaScript로 일괄 설정할 수 있습니다. 이미 작성된 HTML 구조를 유지하면서 공통 설정을 적용할 때 유용합니다.
+
+```html
+<!-- 일괄 적용할 요소에 특정 클래스 부여 -->
+<time-picker class="common-time"></time-picker>
+<!-- 특정 피커만 설정을 덮어쓰고 싶을 경우 직접 속성 작성 -->
+<time-picker class="common-time" interval="30"></time-picker>
+
+<script type="module">
+  document.addEventListener('DOMContentLoaded', () => {
+    const defaultOptions = {
+      'use-ampm': 'true',
+      'interval': '15',
+      'hour-label': '시',
+      'min-label': '분',
+      'ampm-label': '오전/오후'
+    };
+
+    document.querySelectorAll('.common-time').forEach(picker => {
+      Object.entries(defaultOptions).forEach(([key, value]) => {
+        // HTML에 명시적으로 작성된 속성이 없을 때만 기본값 적용
+        if (!picker.hasAttribute(key)) {
+          picker.setAttribute(key, value);
+        }
+      });
+    });
+  });
+</script>
 ```
 
 ## 🎨 스타일 커스터마이징 및 다크모드 (Styling & Theming)

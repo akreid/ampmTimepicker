@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.6] - 2026-05-27
+
+### Added
+- **Batch Configuration Example**: Added documentation and a demo for configuring multiple timepickers globally using JavaScript while allowing per-element overrides.
+- **i18n Validation**: The `required` state validation message now automatically uses the browser's native localized string (e.g., "Please fill out this field." or "이 입력란을 작성하세요.") instead of a hardcoded Korean string.
+- **Custom Validation Message**: Added the `required-message` attribute to allow developers to set a custom error message for the `required` state.
+
 ## [1.2.5] - 2026-05-18
 
 ### Added

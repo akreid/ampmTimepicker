@@ -272,7 +272,13 @@ class AmPmTimePicker extends HTMLElement {
     const hasValue = !!this.value;
 
     if (isRequired && !hasValue) {
-      this._internals.setValidity({ valueMissing: true }, '이 필드는 필수입니다.', this.input);
+      let msg = this.getAttribute('required-message');
+      if (!msg) {
+        const tempInput = document.createElement('input');
+        tempInput.required = true;
+        msg = tempInput.validationMessage || 'Please fill out this field.';
+      }
+      this._internals.setValidity({ valueMissing: true }, msg, this.input);
     } else {
       this._internals.setValidity({});
     }

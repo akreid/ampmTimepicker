@@ -556,13 +556,31 @@ document.querySelectorAll('.common-time-demo').forEach(picker =&gt; {
                 <div class="demo-item">
                     <label for="booking-time">Booking Time (Required):</label>
                     <time-picker name="booking-time" required use-ampm="true"></time-picker>
-                    <time-picker required required-message="필수값입니다"></time-picker>
                     <div class="code-snippet">&lt;time-picker name="booking-time" required
                         use-ampm="true"&gt;&lt;/time-picker&gt;</div>
                 </div>
                 <button type="submit" class="btn">Submit Form</button>
             </form>
             <div id="formOutput" class="status-box">Form Data: Waiting for submission...</div>
+        </section>
+
+        <section>
+            <h2>8. Dynamic Runtime Updates</h2>
+            <p>Modify attributes via JavaScript and see the component react instantly. Try changing these while the dropdown is open!</p>
+            <div class="demo-grid">
+                <div class="demo-item" style="grid-column: 1 / -1;">
+                    <div style="display: flex; align-items: center;">
+                        <time-picker id="dynamic-picker" value="12:00" hour-label="Hour" min-label="Min" ampm-label="AM/PM"></time-picker>
+                        <span style="font-size: 0.9rem; color: var(--text-muted);">⬅️ UI reacts instantly!</span>
+                    </div>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px;">
+                        <button type="button" class="btn" id="btn-toggle-ampm">Toggle 12h/24h Mode</button>
+                        <button type="button" class="btn" id="btn-change-interval">Toggle Interval (5m / 30m)</button>
+                        <button type="button" class="btn" id="btn-change-margin">Toggle Margin-Right</button>
+                        <button type="button" class="btn" id="btn-change-labels">Change Labels (KR/EN)</button>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <footer>
@@ -631,6 +649,37 @@ document.querySelectorAll('.common-time-demo').forEach(picker =&gt; {
                     picker.setAttribute(key, value);
                 }
             });
+        });
+
+        // Dynamic Runtime Updates demo
+        const dynamicPicker = document.getElementById('dynamic-picker');
+        
+        document.getElementById('btn-toggle-ampm').addEventListener('click', () => {
+            const current = dynamicPicker.getAttribute('use-ampm') === 'true';
+            dynamicPicker.setAttribute('use-ampm', !current);
+        });
+
+        document.getElementById('btn-change-interval').addEventListener('click', () => {
+            const current = dynamicPicker.getAttribute('interval') || '1';
+            dynamicPicker.setAttribute('interval', current === '5' ? '30' : '5');
+        });
+
+        document.getElementById('btn-change-margin').addEventListener('click', () => {
+            const current = dynamicPicker.getAttribute('margin-right');
+            dynamicPicker.setAttribute('margin-right', current === '50px' ? '0px' : '50px');
+        });
+
+        document.getElementById('btn-change-labels').addEventListener('click', () => {
+            const isKr = dynamicPicker.getAttribute('hour-label') === '시';
+            if (isKr) {
+                dynamicPicker.setAttribute('hour-label', 'Hour');
+                dynamicPicker.setAttribute('min-label', 'Min');
+                dynamicPicker.setAttribute('ampm-label', 'AM/PM');
+            } else {
+                dynamicPicker.setAttribute('hour-label', '시');
+                dynamicPicker.setAttribute('min-label', '분');
+                dynamicPicker.setAttribute('ampm-label', '오전/오후');
+            }
         });
     </script>
 

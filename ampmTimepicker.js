@@ -149,7 +149,7 @@ class AmPmTimePicker extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ['disabled', 'readonly', 'required', 'value', 'start-time', 'end-time'];
+    return ['disabled', 'readonly', 'required', 'value', 'start-time', 'end-time', 'interval', 'use-ampm', 'margin-right', 'hour-label', 'min-label', 'ampm-label'];
   }
 
   constructor() {
@@ -253,6 +253,40 @@ class AmPmTimePicker extends HTMLElement {
       this.endMin = this.timeToMinutes(newValue) ?? 1439;
       if (this.dropdown && !this.dropdown.classList.contains('ampm-hidden')) {
         this.syncScrollAndHighlight();
+      }
+    } else if (name === 'interval') {
+      this.interval = parseInt(newValue) || 1;
+      this.prepareData();
+      if (this.input.value) {
+        let t = this.get24hMinutes(this.input.value);
+        this.input.value = this.formatFromMinutes(this.clampMinutes(Math.floor(t / 60) * 60 + Math.floor((t % 60) / this.interval) * this.interval));
+      }
+      if (this.dropdown && !this.dropdown.classList.contains('ampm-hidden')) {
+        this.hideDropdown();
+        this.showDropdown();
+      }
+    } else if (name === 'use-ampm') {
+      const currentMin = this.input.value ? this.get24hMinutes(this.input.value) : null;
+      this.useAmPm = newValue === 'true';
+      this.prepareData();
+      this.input.placeholder = this.useAmPm ? "AM hh:mm" : "HH:mm";
+      this.input.maxLength = this.useAmPm ? 8 : 5;
+      if (currentMin !== null) {
+        this.input.value = this.formatFromMinutes(currentMin);
+      }
+      if (this.dropdown && !this.dropdown.classList.contains('ampm-hidden')) {
+        this.hideDropdown();
+        this.showDropdown();
+      }
+    } else if (name === 'margin-right') {
+      this.style.marginRight = newValue || '0px';
+    } else if (['hour-label', 'min-label', 'ampm-label'].includes(name)) {
+      if (name === 'hour-label') this.labelHour = newValue;
+      if (name === 'min-label') this.labelMin = newValue;
+      if (name === 'ampm-label') this.labelAmPm = newValue;
+      if (this.dropdown && !this.dropdown.classList.contains('ampm-hidden')) {
+        this.hideDropdown();
+        this.showDropdown();
       }
     }
   }

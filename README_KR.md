@@ -5,7 +5,6 @@
 [![npm version](https://img.shields.io/npm/v/@akreid/ampm-timepicker.svg?style=flat-square)](https://www.npmjs.com/package/@akreid/ampm-timepicker)
 [![npm downloads](https://img.shields.io/npm/dm/@akreid/ampm-timepicker.svg?style=flat-square)](https://www.npmjs.com/package/@akreid/ampm-timepicker)
 [![npm total downloads](https://img.shields.io/npm/dt/@akreid/ampm-timepicker.svg?style=flat-square)](https://www.npmjs.com/package/@akreid/ampm-timepicker)
-[![npm bundle size](https://img.shields.io/bundlephobia/minzip/@akreid/ampm-timepicker?style=flat-square)](https://bundlephobia.com/package/@akreid/ampm-timepicker)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 
 
@@ -40,7 +39,7 @@ yarn add @akreid/ampm-timepicker
 <head>
   <title>AmPmTimePicker</title>
   <!-- 최상위 컴포넌트만 임포트 (필요 시: :use-ampm, :interval 등 속성을 사용하여 모드 커스텀 가능) -->
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.2.6/ampmTimepicker.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.2.7/ampmTimepicker.js"></script>
 </head>
 <body>
   <!-- 사용 예시 -->
@@ -55,7 +54,7 @@ HTML 파일에 `<script>` 태그를 추가하여 바로 사용할 수 있습니�
 
 ```html
 <!-- 스크립트 추가 -->
-<script src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.2.6/ampmTimepicker.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.2.7/ampmTimepicker.js"></script>
 
 <!-- 기본 사용 -->
 <time-picker></time-picker>

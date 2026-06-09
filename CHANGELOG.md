@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.7] - 2026-06-09
+
+### Added
+- **Dynamic Runtime Reactivity**: Fully expanded dynamic attribute reactivity (`observedAttributes`). Modifying `interval`, `use-ampm`, `margin-right`, `hour-label`, `min-label`, or `ampm-label` via JavaScript now immediately recalculates logic and re-renders the component UI perfectly without page reloading.
+- **Smart Interval Snapping**: When the `interval` attribute is dynamically changed at runtime, the currently selected time value is automatically snapped (floored) to match the new interval constraint.
+- **Dynamic Format Conversion**: When the `use-ampm` attribute is toggled dynamically, the currently selected time is seamlessly converted between 12-hour and 24-hour formats in the input field.
+- **Demo Update**: Added a new "Dynamic Runtime Updates" section to `index.html` to demonstrate the real-time reactivity of the component.
+
+
 ## [1.2.6] - 2026-05-27
 
 ### Added

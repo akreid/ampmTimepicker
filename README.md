@@ -7,7 +7,6 @@
 [![npm version](https://img.shields.io/npm/v/@akreid/ampm-timepicker.svg?style=flat-square)](https://www.npmjs.com/package/@akreid/ampm-timepicker)
 [![npm downloads](https://img.shields.io/npm/dm/@akreid/ampm-timepicker.svg?style=flat-square)](https://www.npmjs.com/package/@akreid/ampm-timepicker)
 [![npm total downloads](https://img.shields.io/npm/dt/@akreid/ampm-timepicker.svg?style=flat-square)](https://www.npmjs.com/package/@akreid/ampm-timepicker)
-[![npm bundle size](https://img.shields.io/bundlephobia/minzip/@akreid/ampm-timepicker?style=flat-square)](https://bundlephobia.com/package/@akreid/ampm-timepicker)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 
 
@@ -40,7 +39,7 @@ yarn add @akreid/ampm-timepicker
 <head>
   <title>AmPmTimePicker Demo</title>
   <!-- Import the component as a module -->
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.2.6/ampmTimepicker.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.2.7/ampmTimepicker.js"></script>
 </head>
 <body>
   <!-- Usage example -->
@@ -54,8 +53,8 @@ yarn add @akreid/ampm-timepicker
 You can use it immediately by adding a `<script>` tag to your HTML file. It is recommended to use a file path that includes the version number.
 
 ```html
-<!-- Include script (Version: 1.2.6) -->
-<script src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.2.6/ampmTimepicker.js"></script>
+<!-- Include script (Version: 1.2.7) -->
+<script src="https://cdn.jsdelivr.net/npm/@akreid/ampm-timepicker@1.2.7/ampmTimepicker.js"></script>
 
 <!-- Basic usage -->
 <time-picker></time-picker>
